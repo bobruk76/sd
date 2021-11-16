@@ -11,11 +11,11 @@
 
     <div class="content__catalog">
       <ProductFilter
-        :price-from.sync="filterPriceFrom"
-        :price-to.sync="filterPriceTo"
-        :category-id.sync="filterCategoryId"
-        :page.sync="page"
-        :color-id.sync="colorId"
+        v-model:price-from="filterPriceFrom"
+        v-model:price-to="filterPriceTo"
+        v-model:category-id="filterCategoryId"
+        v-model:page="page"
+        v-model:color-id="colorId"
       >
 
       </ProductFilter>

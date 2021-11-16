@@ -1,11 +1,8 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from 'vuex';
 import axios from 'axios';
 import { API_BASE_URL } from '@/config';
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+export default createStore({
   state: {
     cartProducts: null,
     userKey: null,
@@ -48,7 +45,7 @@ export default new Vuex.Store({
 
     changeAmountProduct(state, {
       productId,
-      amount
+      amount,
     }) {
       const Item = state.cartProducts.find((item) => item.productId === productId);
       if (Item) {
@@ -120,7 +117,7 @@ export default new Vuex.Store({
 
     addProductToCart(context, {
       productId,
-      amount
+      amount,
     }) {
       return new Promise(((resolve) => setTimeout(resolve, 2500)))
         .then(() => (
@@ -158,7 +155,7 @@ export default new Vuex.Store({
 
     updateProductToCart(context, {
       productId,
-      amount
+      amount,
     }) {
       return axios.put(`${API_BASE_URL}/baskets/products`, {
         productId,
