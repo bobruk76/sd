@@ -1,4 +1,9 @@
-# frontend
+# Diplom poject
+
+## API
+```
+See [https://vue-tzr.skillbox.cc/](https://vue-tzr.skillbox.cc/)
+```
 
 ## Project setup
 ```
