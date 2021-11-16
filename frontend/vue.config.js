@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath: '/s1/',
+  publicPath: '/sd/',
 };

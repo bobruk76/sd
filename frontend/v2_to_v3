@@ -1,0 +1,6 @@
+npm rm vue-template-compiler eslint-plugin-vue @vue/cli-service @vue/cli-plugin-babel @vue/cli-plugin-eslint @vue/cli-plugin-router
+
+npm i vue@next vuex@next vue-router@next
+
+npm i -D @vue/compiler-sfc eslint-plugin-import eslint-plugin-node eslint-plugin-promise@4 eslint-plugin-vue @vue/cli-service @vue/cli-plugin-babel @vue/cli-plugin-eslint babel-eslint eslint@6
+
