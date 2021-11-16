@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import { API_BASE_URL } from '@/config';
-// import products from '@/data/products';
 
 Vue.use(Vuex);
 
@@ -47,7 +46,10 @@ export default new Vuex.Store({
       state.orderInfo = orderInfo;
     },
 
-    changeAmountProduct(state, { productId, amount }) {
+    changeAmountProduct(state, {
+      productId,
+      amount
+    }) {
       const Item = state.cartProducts.find((item) => item.productId === productId);
       if (Item) {
         Item.amount = +amount;
@@ -69,19 +71,22 @@ export default new Vuex.Store({
             params: {
               userAccessKey: context.state.userKey,
             },
-          }).then(
-            (response) => {
-              context.commit('updateOrderId', response.data.orderId);
-            },
-          ).catch(
-            () => {
-              // formErrors = error.request.errors;
-            },
-          ).then(
-            () => {
-              context.commit('preloaderChangeStatus', false);
-            },
-          )));
+          })
+            .then(
+              (response) => {
+                context.commit('updateOrderId', response.data.orderId);
+              },
+            )
+            .catch(
+              () => {
+                // formErrors = error.request.errors;
+              },
+            )
+            .then(
+              () => {
+                context.commit('preloaderChangeStatus', false);
+              },
+            )));
     },
 
     loadBaskets(context) {
@@ -93,17 +98,19 @@ export default new Vuex.Store({
         params: {
           userAccessKey: context.state.userKey,
         },
-      }).then(
-        (response) => {
-          if (!context.state.userKey) {
-            context.commit('updateUserKey', response.data.user.accessKey);
-          }
-          context.commit('updateCartProducts', response.data.items);
-        },
-      ).catch(
-        () => {
-        },
-      )
+      })
+        .then(
+          (response) => {
+            if (!context.state.userKey) {
+              context.commit('updateUserKey', response.data.user.accessKey);
+            }
+            context.commit('updateCartProducts', response.data.items);
+          },
+        )
+        .catch(
+          () => {
+          },
+        )
         .then(
           () => {
             context.commit('preloaderChangeStatus', false);
@@ -111,7 +118,10 @@ export default new Vuex.Store({
         );
     },
 
-    addProductToCart(context, { productId, amount }) {
+    addProductToCart(context, {
+      productId,
+      amount
+    }) {
       return new Promise(((resolve) => setTimeout(resolve, 2500)))
         .then(() => (
           axios.post(`${API_BASE_URL}/baskets/products`, {
@@ -121,11 +131,12 @@ export default new Vuex.Store({
             params: {
               userAccessKey: context.state.userKey,
             },
-          }).then(
-            (response) => {
-              context.commit('updateCartProducts', response.data.items);
-            },
-          )
+          })
+            .then(
+              (response) => {
+                context.commit('updateCartProducts', response.data.items);
+              },
+            )
         ));
     },
 
@@ -137,14 +148,18 @@ export default new Vuex.Store({
         data: {
           productId,
         },
-      }).then(
-        (response) => {
-          context.commit('updateCartProducts', response.data.items);
-        },
-      );
+      })
+        .then(
+          (response) => {
+            context.commit('updateCartProducts', response.data.items);
+          },
+        );
     },
 
-    updateProductToCart(context, { productId, amount }) {
+    updateProductToCart(context, {
+      productId,
+      amount
+    }) {
       return axios.put(`${API_BASE_URL}/baskets/products`, {
         productId,
         quantity: amount,
@@ -152,11 +167,15 @@ export default new Vuex.Store({
         params: {
           userAccessKey: context.state.userKey,
         },
-      }).then(
-        () => {
-          context.commit('changeAmountProduct', { productId, amount });
-        },
-      );
+      })
+        .then(
+          () => {
+            context.commit('changeAmountProduct', {
+              productId,
+              amount,
+            });
+          },
+        );
     },
 
     loadOrder(context, orderId) {
@@ -165,14 +184,16 @@ export default new Vuex.Store({
         params: {
           userAccessKey: context.state.userKey,
         },
-      }).then(
-        (response) => {
-          context.commit('updateOrderInfo', response.data);
-        },
-      ).catch(
-        () => {
-        },
-      )
+      })
+        .then(
+          (response) => {
+            context.commit('updateOrderInfo', response.data);
+          },
+        )
+        .catch(
+          () => {
+          },
+        )
         .then(
           () => {
             context.commit('preloaderChangeStatus', false);
@@ -210,7 +231,8 @@ export default new Vuex.Store({
     },
 
     getAllOrders(state) {
-      return ('orders' in localStorage) ? localStorage.getItem('orders').split(',') : state.orderId;
+      return ('orders' in localStorage) ? localStorage.getItem('orders')
+        .split(',') : state.orderId;
     },
 
   },
