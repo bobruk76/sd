@@ -10,7 +10,7 @@
     </h3>
 
     <span class="catalog__price">
-    {{ product.price | numberFormat }} ₽
+    {{ productPrice }} ₽
   </span>
 
     <ul class="colors colors&#45;&#45;black">
@@ -30,13 +30,19 @@
 </template>
 
 <script>
-// import allColors from '@/data/colors';
+import { computed } from 'vue';
 import numberFormat from '@/helpers/numberFormat';
 
 export default {
   props: ['product'],
-  filters: {
-    numberFormat,
+  setup(props) {
+    const productPrice = computed(() => numberFormat(props.product.price));
+    return {
+      productPrice,
+    };
   },
+  // filters: {
+  //   numberFormat,
+  // },
 };
 </script>
