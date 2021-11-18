@@ -13,7 +13,7 @@
 
     <div class="product__counter form__counter">
       <button type="button" aria-label="Убрать один товар"
-              @click.prevent="decrementProduct(item.productId)"
+              @click.prevent="doDecrementProduct"
       >
         <svg width="10" height="10" fill="currentColor">
           <use xlink:href="#icon-minus"></use>
@@ -23,7 +23,7 @@
       <input type="text" v-model.number="amount" name="count">
 
       <button type="button" aria-label="Добавить один товар"
-              @click.prevent="incrementProduct(item.productId)">
+              @click.prevent="doIncrementProduct">
         <svg width="10" height="10" fill="currentColor">
           <use xlink:href="#icon-plus"></use>
         </svg>
@@ -31,7 +31,7 @@
     </div>
 
     <b class="product__price">
-      {{ item.totalPrice | numberFormat }} ₽
+      {{ itemTotalPrice }} ₽
     </b>
 
     <button class="product__del button-del"
@@ -46,39 +46,64 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { computed, ref, watch } from 'vue';
+import { useStore } from 'vuex';
 import numberFormat from '@/helpers/numberFormat';
 
 export default {
-  name: 'CartItem',
-
   props: ['item'],
 
-  filters: { numberFormat },
+  setup(props) {
+    const store = useStore();
+    const amount = ref(props.item.amount);
+    const doIncrementProduct = () => {
+      amount.value += 1;
+    };
+    const doDecrementProduct = () => {
+      amount.value -= 1;
+    };
+    const itemTotalPrice = computed(() => numberFormat(props.item.totalPrice));
 
-  methods: {
-    incrementProduct() {
-      this.amount += 1;
-    },
+    watch(amount, () => {
+      if (amount.value > 0) {
+        store.dispatch('updateProductToCart', { productId: props.item.productId, amount: amount.value });
+      } else {
+        store.dispatch('removeProduct', props.item.productId);
+      }
+    });
 
-    decrementProduct() {
-      this.amount -= 1;
-    },
-    ...mapActions(['removeProduct', 'updateProductToCart']),
+    return {
+      amount,
+      doIncrementProduct,
+      doDecrementProduct,
+      itemTotalPrice,
+    };
   },
-  computed: {
-    amount: {
-      get() {
-        return this.item.amount;
-      },
-      set(value) {
-        if (value > 0) {
-          this.updateProductToCart({ productId: this.item.productId, amount: value });
-        } else {
-          this.removeProduct(this.item.productId);
-        }
-      },
-    },
-  },
+  // filters: { numberFormat },
+  //
+  // methods: {
+  //   incrementProduct() {
+  //     this.amount += 1;
+  //   },
+  //
+  //   decrementProduct() {
+  //     this.amount -= 1;
+  //   },
+  //   ...mapActions(['removeProduct', 'updateProductToCart']),
+  // },
+  // computed: {
+  //   amount: {
+  //     get() {
+  //       return this.item.amount;
+  //     },
+  //     set(value) {
+  //       if (value > 0) {
+  //         this.updateProductToCart({ productId: this.item.productId, amount: value });
+  //       } else {
+  //         this.removeProduct(this.item.productId);
+  //       }
+  //     },
+  //   },
+  // },
 };
 </script>
