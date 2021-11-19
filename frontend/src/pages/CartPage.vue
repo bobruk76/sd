@@ -35,7 +35,7 @@
             Мы посчитаем стоимость доставки на следующем этапе
           </p>
           <p class="cart__price">
-            Итого: <span>{{ totalSum | numberFormat }} ₽</span>
+            Итого: <span>{{ formatTotalSum }} ₽</span>
           </p>
 
           <router-link class="cart__button button button--primery"
@@ -50,29 +50,48 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
 import numberFormat from '@/helpers/numberFormat';
 import CartItem from '@/components/CartItem.vue';
 
 export default {
-  filters: {
-    numberFormat,
-  },
   components: { CartItem },
-  computed: {
-    ...mapGetters({
-      products: 'cartDetailsProducts',
-      totalAmounts: 'cartTotalAmounts',
-      totalSum: 'cartTotalSum',
-    }),
-  },
 
-  methods: {
-    ...mapActions(['loadBaskets']),
-  },
+  setup() {
+    const store = useStore();
+    const products = ref({});
+    const totalSum = store.dispatch('cartTotalSum');
+    const formatTotalSum = computed(() => numberFormat(totalSum));
 
-  created() {
-    this.loadBaskets();
+    const doLoadBasket = () => {
+      store.dispatch('loadBaskets');
+      products.value = store.dispatch('cartDetailsProducts');
+    };
+    doLoadBasket();
+    return {
+      formatTotalSum,
+      products,
+    };
   },
+  // filters: {
+  //   numberFormat,
+  // },
+
+  // computed: {
+  //   ...mapGetters({
+  //     products: 'cartDetailsProducts',
+  //     totalAmounts: 'cartTotalAmounts',
+  //     totalSum: 'cartTotalSum',
+  //   }),
+  // },
+  //
+  // methods: {
+  //   ...mapActions(['loadBaskets']),
+  // },
+  //
+  // created() {
+  //   this.loadBaskets();
+  // },
 };
 </script>
