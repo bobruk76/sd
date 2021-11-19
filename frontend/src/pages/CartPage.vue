@@ -39,8 +39,8 @@
           </p>
 
           <router-link class="cart__button button button--primery"
-                  type="submit"
-                  :to="{ name: 'order' }">
+                       type="submit"
+                       :to="{ name: 'order' }">
             Оформить заказ
           </router-link>
         </div>
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useStore } from 'vuex';
 import numberFormat from '@/helpers/numberFormat';
 import CartItem from '@/components/CartItem.vue';
@@ -60,18 +60,17 @@ export default {
 
   setup() {
     const store = useStore();
-    const products = ref({});
-    const totalSum = store.dispatch('cartTotalSum');
-    const formatTotalSum = computed(() => numberFormat(totalSum));
+    const products = computed(() => store.getters.cartDetailsProducts);
+    const totalSum = computed(() => store.getters.cartTotalSum);
+    const formatTotalSum = computed(() => numberFormat(totalSum.value));
 
     const doLoadBasket = () => {
       store.dispatch('loadBaskets');
-      products.value = store.dispatch('cartDetailsProducts');
     };
     doLoadBasket();
     return {
-      formatTotalSum,
       products,
+      formatTotalSum,
     };
   },
   // filters: {

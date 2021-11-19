@@ -36,7 +36,7 @@
 
     <button class="product__del button-del"
             type="button" aria-label="Удалить товар из корзины"
-            @click.prevent="removeProduct(item.productId)"
+            @click.prevent="doRemoveProduct"
     >
       <svg width="20" height="20" fill="currentColor">
         <use xlink:href="#icon-close"></use>
@@ -62,6 +62,9 @@ export default {
     const doDecrementProduct = () => {
       amount.value -= 1;
     };
+    const doRemoveProduct = () => {
+      store.dispatch('removeProduct', props.item.productId);
+    };
     const itemTotalPrice = computed(() => numberFormat(props.item.totalPrice));
 
     watch(amount, () => {
@@ -76,6 +79,7 @@ export default {
       amount,
       doIncrementProduct,
       doDecrementProduct,
+      doRemoveProduct,
       itemTotalPrice,
     };
   },
