@@ -39,7 +39,7 @@
         <div class="item__form">
           <form class="form" action="#" method="POST">
             <b class="item__price">
-              {{ product.price | numberFormat }} ₽
+              {{ productPrice }} ₽
             </b>
 
             <fieldset class="form__block">
@@ -68,28 +68,33 @@
 
             <div class="item__row">
               <div class="form__counter">
-                <button type="button" aria-label="Убрать один товар" @click="discrement">
+                <button type="button"
+                        aria-label="Убрать один товар"
+                        @click.prevent="doDecrementProduct">
                   <svg width="12" height="12" fill="currentColor">
                     <use xlink:href="#icon-minus"></use>
                   </svg>
                 </button>
 
-                <input type="text" v-model="productAmount">
+                <input type="text" v-model="product.amount">
 
-                <button type="button" aria-label="Добавить один товар" @click="increment">
+                <button type="button"
+                        aria-label="Добавить один товар"
+                        @click.prevent="doIncrementProduct"
+                >
                   <svg width="12" height="12" fill="currentColor">
                     <use xlink:href="#icon-plus"></use>
                   </svg>
                 </button>
               </div>
 
-              <button class="button button--primery" type="submit" @click.prevent="addToCart">
+              <button class="button button--primery" type="submit" @click.prevent="doAddToCart">
                 В корзину
               </button>
-           </div>
-            <b-alert v-show="productAdded" show variant="success">
+            </div>
+            <p v-show="productAdded">
               Товар успешно добавлен в корзину!
-            </b-alert>
+            </p>
 
           </form>
         </div>
@@ -137,81 +142,138 @@
 
 <script>
 import axios from 'axios';
-// import colors from '@/data/colors';
-// import products from '@/data/products';
-// import categories from '@/data/categories';
-import { mapActions, mapMutations } from 'vuex';
+import { computed, toRefs } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
 import numberFormat from '@/helpers/numberFormat';
+import { API_BASE_URL } from '@/config';
 
 export default {
-  data() {
-    return {
-      productAmount: 1,
-      productData: null,
-      productAdded: false,
-    };
-  },
-  methods: {
-    ...mapActions(['addProductToCart']),
-    ...mapMutations(['preloaderChangeStatus']),
-
-    addToCart() {
-      this.preloaderChangeStatus(true);
-      if (this.productAmount > 0) {
-        this.addProductToCart({
-          productId: this.product.id,
-          amount: this.productAmount,
-        }).then(() => {
-          this.productAdded = true;
+  setup() {
+    const productAdded = false;
+    const store = useStore();
+    const $route = useRoute();
+    const { productData } = toRefs({});
+    const category = computed(() => productData.value.category);
+    const doLoadProduct = () => {
+      store.commit('preloaderChangeStatus', true);
+      axios.get(`${API_BASE_URL}/products/${$route.params.id}`)
+        .then((response) => {
+          productData.value = response.data.map((product) => ({
+            ...product,
+            categoryId: product.category.id,
+            amount: 1,
+            productPrice: numberFormat(product.price),
+            img: product.image.file.url,
+          }));
         })
-          .catch(() => {})
+        .catch(() => {
+        })
+        .then(() => {
+          store.commit('preloaderChangeStatus', false);
+        });
+    };
+    const doIncrementProduct = () => {
+      productData.value.amount += 1;
+    };
+    const doDecrementProduct = () => {
+      productData.value.amount -= 1;
+    };
+    const doAddToCart = () => {
+      store.commit('preloaderChangeStatus', true);
+      if (productData.value.amount > 0) {
+        store.dispatch('addProductToCart', {
+          productId: this.product.id,
+          amount: productData.value.amount,
+        }).then(() => {
+          productData.value = true;
+        })
+          .catch(() => {
+          })
           .then(() => {
-            this.preloaderChangeStatus(false);
+            store.commit('preloaderChangeStatus', false);
           });
       }
-    },
-
-    increment() {
-      this.productAmount += 1;
-    },
-
-    discrement() {
-      if (this.productAmount > 1) {
-        this.productAmount -= 1;
-      }
-    },
-
-    loadProduct() {
-      const url = `https://vue-study.skillbox.cc/api/products/${this.$route.params.id}`;
-      axios.get(url).then((response) => {
-        this.productData = response.data;
-      });
-    },
-  },
-  filters: {
-    numberFormat,
-  },
-  computed: {
-    product() {
-      // return products.find((item) => item.id === +this.$route.params.id);
-      return this.productData ? ((item = this.productData) => ({
-        ...item,
-        img: item.image.file.url,
-      }))() : {};
-    },
-    category() {
-      return this.productData ? this.product.category : {};
-    },
+    };
+    doLoadProduct();
+    return {
+      productAdded,
+      product: productData,
+      category,
+      doIncrementProduct,
+      doDecrementProduct,
+      doAddToCart,
+    };
   },
 
-  watch: {
-    '$route.params.id': {
-      handler() {
-        this.loadProduct();
-      },
-      immediate: true,
-    },
-  },
+  // data() {
+  //   return {
+  //     productAmount: 1,
+  //     productData: null,
+  //     productAdded: false,
+  //   };
+  // },
+  // methods: {
+  //   ...mapActions(['addProductToCart']),
+  //   ...mapMutations(['preloaderChangeStatus']),
+  //
+  //   addToCart() {
+  //     this.preloaderChangeStatus(true);
+  //     if (this.productAmount > 0) {
+  //       this.addProductToCart({
+  //         productId: this.product.id,
+  //         amount: this.productAmount,
+  //       }).then(() => {
+  //         this.productAdded = true;
+  //       })
+  //         .catch(() => {})
+  //         .then(() => {
+  //           this.preloaderChangeStatus(false);
+  //         });
+  //     }
+  //   },
+  //
+  //   increment() {
+  //     this.productAmount += 1;
+  //   },
+  //
+  //   discrement() {
+  //     if (this.productAmount > 1) {
+  //       this.productAmount -= 1;
+  //     }
+  //   },
+  //
+  //   loadProduct() {
+  //     const url = `https://vue-study.skillbox.cc/api/products/${this.$route.params.id}`;
+  //     axios.get(url).then((response) => {
+  //       this.productData = response.data;
+  //     });
+  //   },
+  // },
+  // filters: {
+  //   numberFormat,
+  // },
+  // computed: {
+  //   product() {
+  //     // return products.find((item) => item.id === +this.$route.params.id);
+  //     return this.productData ? ((item = this.productData) => ({
+  //       ...item,
+  //       img: item.image.file.url,
+  //     }))() : {};
+  //   },
+  //   category() {
+  //     return this.productData ? this.product.category : {};
+  //   },
+  // },
+  //
+  // watch: {
+  //   '$route.params.id': {
+  //     handler() {
+  //       this.loadProduct();
+  //     },
+  //     immediate: true,
+  //   },
+  // },
 
 };
 </script>

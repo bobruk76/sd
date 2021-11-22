@@ -41,8 +41,5 @@ export default {
       productPrice,
     };
   },
-  // filters: {
-  //   numberFormat,
-  // },
 };
 </script>

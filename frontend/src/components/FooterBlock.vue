@@ -68,8 +68,9 @@
       </ul>
 
       <p class="footer__desc">
-        Все права на&nbsp;материалы, находящиеся на&nbsp;сайте, охраняются в&nbsp;соответствии с&nbsp;законодательством&nbsp;РФ,
-        в&nbsp;том числе об&nbsp;авторском праве и&nbsp;смежных правах.
+        Все права на материалы, находящиеся на сайте, охраняются в соответствии с законодательством
+        РФ,
+        в том числе об авторском праве и смежных правах.
       </p>
 
       <ul class="footer__data">
@@ -86,7 +87,7 @@
       </ul>
 
       <span class="footer__copyright">
-        © 2020 Технозавррр
+        © {{ fullYear }} Технозавррр
       </span>
     </div>
   </footer>
@@ -94,6 +95,11 @@
 
 <script>
 export default {
-  name: 'Footer',
+  setup() {
+    const fullYear = new Date().getFullYear();
+    return {
+      fullYear,
+    };
+  },
 };
 </script>

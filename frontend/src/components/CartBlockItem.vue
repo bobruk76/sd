@@ -1,17 +1,22 @@
 <template>
   <li class="cart__order">
     <h3>{{ item.product.title }}</h3>
-    <b>{{ item.quantity }} x {{ item.price | numberFormat }} ₽</b>
+    <b>{{ item.quantity }} x {{ itemPrice }} ₽</b>
     <span>Артикул: {{ item.product.id }}</span>
   </li>
 </template>
 
 <script>
+import { computed } from 'vue';
 import numberFormat from '@/helpers/numberFormat';
 
 export default {
-  name: 'CartBlockItem',
   props: ['item'],
-  filters: { numberFormat },
+  setup(props) {
+    const itemPrice = computed(() => numberFormat(props.item.price));
+    return {
+      itemPrice,
+    };
+  },
 };
 </script>

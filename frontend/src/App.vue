@@ -1,9 +1,9 @@
 <template>
   <body>
-    <Preloader v-show="preloaderActive"></Preloader>
-    <Header></Header>
+    <preloader-component v-show="preloaderActive"></preloader-component>
+    <header-block></header-block>
     <router-view></router-view>
-    <Footer></Footer>
+    <footer-block></footer-block>
   </body>
 </template>
 
@@ -12,24 +12,32 @@
 </style>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
-import Preloader from '@/components/Preloader.vue';
+import { useStore } from 'vuex';
+import HeaderBlock from '@/components/HeaderBlock.vue';
+import FooterBlock from '@/components/FooterBlock.vue';
+import PreloaderComponent from '@/components/PreloaderComponent.vue';
 
 export default {
-  components: { Header, Footer, Preloader },
-  methods: {
-    ...mapActions(['loadBaskets']),
+  components: { HeaderBlock, FooterBlock, PreloaderComponent },
+  setup() {
+    const store = useStore();
+    const preloaderActive = store.getters.preloaderActive;
+    const doLoadBaskets = () => store.dispatch('loadBaskets');
+    doLoadBaskets();
+    return {
+      preloaderActive,
+    };
   },
-  computed: {
-    ...mapGetters(['preloaderActive']),
-  },
-
-  created() {
-    this.loadBaskets();
-  },
-
+  // methods: {
+  //   ...mapActions(['loadBaskets']),
+  // },
+  // computed: {
+  //   ...mapGetters(['preloaderActive']),
+  // },
+  //
+  // created() {
+  //   this.loadBaskets();
+  // },
 };
 
 </script>

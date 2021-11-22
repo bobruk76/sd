@@ -10,7 +10,7 @@
     </div>
 
     <div class="content__catalog">
-      <ProductFilter
+      <product-filter
         v-model:price-from="filterPriceFrom"
         v-model:price-to="filterPriceTo"
         v-model:category-id="filterCategoryId"
@@ -18,17 +18,17 @@
         v-model:color-id="colorId"
       >
 
-      </ProductFilter>
+      </product-filter>
       <section class="catalog">
-        <ProductList
+        <product-list
           :products="products"
         >
 
-        </ProductList>
-        <BasePaginate
+        </product-list>
+        <base-paginate
           :count-pages="countProductPages"
           v-model="page">
-        </BasePaginate>
+        </base-paginate>
       </section>
     </div>
   </main>

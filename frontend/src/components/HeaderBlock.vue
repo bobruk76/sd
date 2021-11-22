@@ -4,7 +4,8 @@
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <symbol id="icon-arrow-left" viewBox="0 0 8 14">
           <path
-            d="M6 12H4v-2h2v2zm-2-2H2V8h2v2zM2 8H0V6h2v2zm2-2H2V4h2v2zm2-2H4V2h2v2zm2-2H6V0h2v2zm0 12H6v-2h2v2z"></path>
+            d="M6 12H4v-2h2v2zm-2-2H2V8h2v2zM2 8H0V6h2v2zm2-2H2V4h2v2zm2-2H4V2h2v2zm2-2H6V0h2v2zm0 12H6v-2h2v2z"
+          ></path>
         </symbol>
         <symbol id="icon-arrow-right" viewBox="0 0 8 14">
           <path
@@ -59,7 +60,7 @@
           <span class="header__info">Каталог</span>
         </router-link>
         <router-link class="header__logo" :to="{ name: 'main' }">
-          <img src="/img/svg/logo-tech.svg" alt="Логотип интернет магазина Технозавррр" width="190"
+          <img :src="logoImg" alt="Логотип интернет магазина Технозавррр" width="190"
                height="33">
         </router-link>
 
@@ -80,12 +81,20 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { useStore } from 'vuex';
 
 export default {
-  name: 'Header',
-  computed: {
-    ...mapGetters(['cartTotalAmounts']),
+  setup() {
+    const store = useStore();
+    const logoImg = '/img/svg/logo-tech.svg';
+    const { cartTotalAmounts } = store.getters.cartTotalAmounts;
+    return {
+      cartTotalAmounts,
+      logoImg,
+    };
   },
+  // computed: {
+  //   ...mapGetters(['cartTotalAmounts']),
+  // },
 };
 </script>
