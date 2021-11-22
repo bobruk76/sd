@@ -81,13 +81,14 @@
 </template>
 
 <script>
+import { computed } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
   setup() {
     const store = useStore();
     const logoImg = '/img/svg/logo-tech.svg';
-    const { cartTotalAmounts } = store.getters.cartTotalAmounts;
+    const cartTotalAmounts = computed(() => store.getters.cartTotalAmounts);
     return {
       cartTotalAmounts,
       logoImg,

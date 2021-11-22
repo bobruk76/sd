@@ -142,7 +142,7 @@
 
 <script>
 import axios from 'axios';
-import { computed, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import numberFormat from '@/helpers/numberFormat';
@@ -153,7 +153,7 @@ export default {
     const productAdded = false;
     const store = useStore();
     const $route = useRoute();
-    const { productData } = toRefs({});
+    const productData = ref(null);
     const category = computed(() => productData.value.category);
     const doLoadProduct = () => {
       store.commit('preloaderChangeStatus', true);
