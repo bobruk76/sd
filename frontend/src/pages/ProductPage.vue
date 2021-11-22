@@ -39,7 +39,7 @@
         <div class="item__form">
           <form class="form" action="#" method="POST">
             <b class="item__price">
-              {{ productPrice }} ₽
+              {{ product.productPrice }} ₽
             </b>
 
             <fieldset class="form__block">
@@ -76,7 +76,7 @@
                   </svg>
                 </button>
 
-                <input type="text" v-model="product.amount">
+                <input type="text" v-model.number="productAmount">
 
                 <button type="button"
                         aria-label="Добавить один товар"
@@ -150,55 +150,58 @@ import { API_BASE_URL } from '@/config';
 
 export default {
   setup() {
-    const productAdded = false;
-    const store = useStore();
+    const productAdded = ref(false);
+    const $store = useStore();
     const $route = useRoute();
     const productData = ref(null);
+    const productAmount = ref(1);
+    const product = computed((item = productData.value) => ({
+      ...item,
+      productPrice: numberFormat(item.price),
+      img: item.image.file.url,
+    }));
     const category = computed(() => productData.value.category);
-    const doLoadProduct = () => {
-      store.commit('preloaderChangeStatus', true);
-      axios.get(`${API_BASE_URL}/products/${$route.params.id}`)
-        .then((response) => {
-          productData.value = response.data.map((product) => ({
-            ...product,
-            categoryId: product.category.id,
-            amount: 1,
-            productPrice: numberFormat(product.price),
-            img: product.image.file.url,
-          }));
-        })
-        .catch(() => {
-        })
-        .then(() => {
-          store.commit('preloaderChangeStatus', false);
-        });
-    };
+
     const doIncrementProduct = () => {
-      productData.value.amount += 1;
+      productAmount.value += 1;
     };
     const doDecrementProduct = () => {
-      productData.value.amount -= 1;
+      productAmount.value -= 1;
     };
     const doAddToCart = () => {
-      store.commit('preloaderChangeStatus', true);
-      if (productData.value.amount > 0) {
-        store.dispatch('addProductToCart', {
-          productId: this.product.id,
-          amount: productData.value.amount,
+      $store.commit('preloaderChangeStatus', true);
+      if (productAmount.value > 0) {
+        $store.dispatch('addProductToCart', {
+          productId: product.value.id,
+          amount: productAmount.value,
         }).then(() => {
-          productData.value = true;
+          productAdded.value = true;
         })
           .catch(() => {
           })
           .then(() => {
-            store.commit('preloaderChangeStatus', false);
+            $store.commit('preloaderChangeStatus', false);
           });
       }
     };
-    doLoadProduct();
+
+    const onLoadProduct = () => {
+      $store.commit('preloaderChangeStatus', true);
+      axios.get(`${API_BASE_URL}/products/${$route.params.id}`)
+        .then((response) => {
+          productData.value = response.data;
+        })
+        .catch(() => {
+        })
+        .then(() => {
+          $store.commit('preloaderChangeStatus', false);
+        });
+    };
+    onLoadProduct();
     return {
       productAdded,
-      product: productData,
+      product,
+      productAmount,
       category,
       doIncrementProduct,
       doDecrementProduct,
