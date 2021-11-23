@@ -10,11 +10,6 @@ import formFieldMixin from '@/mixins/formFieldMixin';
 
 export default {
   mixins: [formFieldMixin],
-  props: [
-    {
-      name: 'type',
-      default: 'text',
-    },
-  ],
+  props: ['type'],
 };
 </script>

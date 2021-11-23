@@ -93,7 +93,8 @@
               </li>
               <li class="options__item">
                 <label class="options__label">
-                  <input class="options__radio sr-only" type="radio" name="delivery" value="500">
+                  <input class="options__radio sr-only"
+                         type="radio" name="delivery" value="500">
                   <span class="options__value">
                     Курьером <b>500 ₽</b>
                   </span>
@@ -123,11 +124,11 @@
           </div>
         </div>
 
-<!--        <cart-block :products="products" :total-sum="totalSum" :total-amounts="totalAmounts">-->
-<!--          <button class="cart__button button button&#45;&#45;primery" type="submit">-->
-<!--            Оформить заказ-->
-<!--          </button>-->
-<!--        </cart-block>-->
+        <cart-block :products="products" :total-sum="totalSum" :total-amounts="totalAmounts">
+          <button class="cart__button button button--primery" type="submit">
+            Оформить заказ
+          </button>
+        </cart-block>
 
         <div class="cart__error form__error-block" v-show="errorMessage">
           <h4>Заявка не отправлена!</h4>
@@ -142,72 +143,94 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-// import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
+// import axios from 'axios';
 import InputFormField from '@/components/InputFormField.vue';
 import TextareaFormField from '@/components/TextareaFormField.vue';
-// import CartBlock from '@/components/CartBlock.vue';
-import { API_BASE_URL } from '@/config';
+import CartBlock from '@/components/CartBlock.vue';
+// import { API_BASE_URL } from '@/config';
 
 export default {
-  // components: { InputFormField, TextareaFormField, CartBlock },
-  components: { InputFormField, TextareaFormField },
-  data() {
+  components: { InputFormField, TextareaFormField, CartBlock },
+  setup() {
+    const $store = useStore();
+    const formFields = ref({});
+    const formErrors = ref({});
+    const errorMessage = ref(null);
+    const products = computed(() => $store.getters.cartDetailsProducts);
+    const totalAmounts = computed(() => $store.getters.cartTotalAmounts);
+    const totalSum = computed(() => $store.getters.cartTotalSum);
+    const sendOrder = () => {};
+    const doLoadBasket = () => {
+      $store.dispatch('loadBaskets');
+    };
+    doLoadBasket();
     return {
-      formFields: {},
-      formErrors: {},
-      errorMessage: null,
+      formFields,
+      formErrors,
+      totalAmounts,
+      totalSum,
+      errorMessage,
+      products,
+      sendOrder,
     };
   },
-  methods: {
-    ...mapActions(['loadBaskets']),
-    ...mapActions({
-      vSendOrder: 'sendOrder',
-    }),
-    ...mapMutations(['preloaderChangeStatus', 'updateOrderInfo', 'updateOrderId']),
-
-    sendOrder() {
-      this.preloaderChangeStatus(true);
-      return new Promise(((resolve) => setTimeout(resolve, 0)))
-        .then(() => (
-          axios.post(`${API_BASE_URL}/orders`, {
-            ...this.formFields,
-          }, {
-            params: {
-              userAccessKey: this.getUserKey,
-            },
-          }).then(
-            (response) => {
-              this.updateOrderInfo(response.data);
-              this.updateOrderId(response.data.id);
-              this.preloaderChangeStatus(false);
-              // this.$router.push({ name: 'orderInfo', params: { id: response.data.id } });
-            },
-          ).catch(
-            (error) => {
-              this.formErrors = error.response.data.error.request || {};
-              this.errorMessage = error.response.data.error.message || '';
-            },
-          ).then(
-            () => {
-              this.preloaderChangeStatus(false);
-            },
-          )));
-    },
-
-  },
-
-  computed: {
-    ...mapGetters(['getUserKey']),
-    ...mapGetters({
-      products: 'cartDetailsProducts',
-      totalAmounts: 'cartTotalAmounts',
-      totalSum: 'cartTotalSum',
-    }),
-  },
-  created() {
-    this.loadBaskets();
-  },
+  // data() {
+  //   return {
+  //     formFields: {},
+  //     formErrors: {},
+  //     errorMessage: null,
+  //   };
+  // },
+  // methods: {
+  //   ...mapActions(['loadBaskets']),
+  //   ...mapActions({
+  //     vSendOrder: 'sendOrder',
+  //   }),
+  //   ...mapMutations(['preloaderChangeStatus', 'updateOrderInfo', 'updateOrderId']),
+  //
+  //   sendOrder() {
+  //     this.preloaderChangeStatus(true);
+  //     return new Promise(((resolve) => setTimeout(resolve, 0)))
+  //       .then(() => (
+  //         axios.post(`${API_BASE_URL}/orders`, {
+  //           ...this.formFields,
+  //         }, {
+  //           params: {
+  //             userAccessKey: this.getUserKey,
+  //           },
+  //         }).then(
+  //           (response) => {
+  //             this.updateOrderInfo(response.data);
+  //             this.updateOrderId(response.data.id);
+  //             this.preloaderChangeStatus(false);
+  //             // this.$router.push({ name: 'orderInfo', params: { id: response.data.id } });
+  //           },
+  //         ).catch(
+  //           (error) => {
+  //             this.formErrors = error.response.data.error.request || {};
+  //             this.errorMessage = error.response.data.error.message || '';
+  //           },
+  //         ).then(
+  //           () => {
+  //             this.preloaderChangeStatus(false);
+  //           },
+  //         )));
+  //   },
+  //
+  // },
+  //
+  // computed: {
+  //   ...mapGetters(['getUserKey']),
+  //   ...mapGetters({
+  //     products: 'cartDetailsProducts',
+  //     totalAmounts: 'cartTotalAmounts',
+  //     totalSum: 'cartTotalSum',
+  //   }),
+  // },
+  // created() {
+  //   this.loadBaskets();
+  // },
 };
 </script>

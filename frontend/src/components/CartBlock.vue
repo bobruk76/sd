@@ -1,7 +1,8 @@
 <template>
   <div class="cart__block">
     <ul class="cart__orders">
-      <cart-block-item v-for="item in products" :item="item" :key="item.id" ></cart-block-item>
+      <cart-block-item v-for="item in products" :item="item" :key="item.id" >
+      </cart-block-item>
     </ul>
 
     <div class="cart__total">
@@ -13,17 +14,15 @@
 </template>
 
 <script>
-// import { computed } from 'vue';
-import { ref } from 'vue';
+import { computed } from 'vue';
 import CartBlockItem from '@/components/CartBlockItem.vue';
-// import numberFormat from '@/helpers/numberFormat';
+import numberFormat from '@/helpers/numberFormat';
 
 export default {
   components: { CartBlockItem },
   props: ['products', 'totalSum', 'totalAmounts'],
   setup(props) {
-    // const totalSumFormat = computed(() => numberFormat(props.totalSum));
-    const totalSumFormat = ref(props.totalSum);
+    const totalSumFormat = computed(() => numberFormat(props.totalSum));
     return {
       totalSumFormat,
     };
