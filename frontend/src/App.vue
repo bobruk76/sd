@@ -2,7 +2,7 @@
   <body>
     <preloader-component v-show="preloaderActive"></preloader-component>
     <header-block></header-block>
-    <router-view :key="$route.fullPath"></router-view>
+    <router-view :key="routeFullPath"></router-view>
     <footer-block></footer-block>
   </body>
 </template>
@@ -24,24 +24,15 @@ export default {
   setup() {
     const $store = useStore();
     const $route = useRoute();
+    const routeFullPath = computed(() => $route.fullPath);
     const preloaderActive = computed(() => $store.getters.preloaderActive);
     const doLoadBaskets = () => $store.dispatch('loadBaskets');
     doLoadBaskets();
     return {
       preloaderActive,
-      $route,
+      routeFullPath,
     };
   },
-  // methods: {
-  //   ...mapActions(['loadBaskets']),
-  // },
-  // computed: {
-  //   ...mapGetters(['preloaderActive']),
-  // },
-  //
-  // created() {
-  //   this.loadBaskets();
-  // },
 };
 
 </script>

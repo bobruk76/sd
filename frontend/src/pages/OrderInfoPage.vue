@@ -76,12 +76,12 @@
           </ul>
         </div>
 
-        <CartBlock :products="orderInfo.basket.items"
+        <cart-block :products="orderInfo.basket.items"
                    :total-sum="orderInfo.totalPrice"
                    :total-amounts="totalAmounts"
         >
           <p></p>
-        </CartBlock>
+        </cart-block>
       </form>
       <ul>
         <li v-for="order in orders" :key="order">
@@ -101,10 +101,7 @@ import CartBlock from '@/components/CartBlock.vue';
 export default {
   name: 'OrderInfoPage',
   components: { CartBlock },
-  data() {
-    return {
-    };
-  },
+
   computed: {
     ...mapGetters({
       orders: 'getAllOrders',

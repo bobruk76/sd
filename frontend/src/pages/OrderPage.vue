@@ -35,47 +35,47 @@
         <div class="cart__field">
           <div class="cart__data">
 
-            <InputFormField
+            <input-form-field
               v-model="formFields.name"
               :error="formErrors.name"
               placeholder="Введите ваше полное имя"
               title="ФИО"
             >
-            </InputFormField>
+            </input-form-field>
 
-            <InputFormField
+            <input-form-field
               v-model="formFields.address"
               :error="formErrors.address"
               placeholder="Введите ваш адрес"
               title="Адрес доставки"
             >
-            </InputFormField>
+            </input-form-field>
 
-            <InputFormField
+            <input-form-field
               v-model="formFields.phone"
               :error="formErrors.phone"
               placeholder="Введите ваш телефон"
               title="Телефон"
               type="tel"
             >
-            </InputFormField>
+            </input-form-field>
 
-            <InputFormField
+            <input-form-field
               v-model="formFields.email"
               :error="formErrors.email"
               placeholder="Введи ваш Email"
               title="Email"
               type="email"
             >
-            </InputFormField>
+            </input-form-field>
 
-            <TextareaFormField
+            <textarea-form-field
               v-model="formFields.comments"
               :error="formErrors.comments"
               placeholder="Ваши пожелания"
               title="Комментарий к заказу"
             >
-            </TextareaFormField>
+            </textarea-form-field>
 
           </div>
 
@@ -123,11 +123,11 @@
           </div>
         </div>
 
-        <CartBlock :products="products" :total-sum="totalSum" :total-amounts="totalAmounts">
-          <button class="cart__button button button--primery" type="submit">
-            Оформить заказ
-          </button>
-        </CartBlock>
+<!--        <cart-block :products="products" :total-sum="totalSum" :total-amounts="totalAmounts">-->
+<!--          <button class="cart__button button button&#45;&#45;primery" type="submit">-->
+<!--            Оформить заказ-->
+<!--          </button>-->
+<!--        </cart-block>-->
 
         <div class="cart__error form__error-block" v-show="errorMessage">
           <h4>Заявка не отправлена!</h4>
@@ -143,13 +143,16 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+// import { useRouter } from 'vue-router';
 import axios from 'axios';
 import InputFormField from '@/components/InputFormField.vue';
 import TextareaFormField from '@/components/TextareaFormField.vue';
-import CartBlock from '@/components/CartBlock.vue';
+// import CartBlock from '@/components/CartBlock.vue';
 import { API_BASE_URL } from '@/config';
 
 export default {
+  // components: { InputFormField, TextareaFormField, CartBlock },
+  components: { InputFormField, TextareaFormField },
   data() {
     return {
       formFields: {},
@@ -157,8 +160,6 @@ export default {
       errorMessage: null,
     };
   },
-  name: 'OrderPage',
-  components: { InputFormField, TextareaFormField, CartBlock },
   methods: {
     ...mapActions(['loadBaskets']),
     ...mapActions({
@@ -181,7 +182,7 @@ export default {
               this.updateOrderInfo(response.data);
               this.updateOrderId(response.data.id);
               this.preloaderChangeStatus(false);
-              this.$router.push({ name: 'orderInfo', params: { id: response.data.id } });
+              // this.$router.push({ name: 'orderInfo', params: { id: response.data.id } });
             },
           ).catch(
             (error) => {
