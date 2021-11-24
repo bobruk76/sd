@@ -14,13 +14,13 @@
   </span>
 
     <ul class="colors colors&#45;&#45;black">
-      <li class="colors__item" v-for="color in product.colors" :key="color.id">
+      <li class="colors__item" v-for="item in product.colors" :key="item.color.id">
         <label class="colors__label">
           <input class="colors__radio sr-only"
                  type="radio" name="color-7"
-                 :value="color.title">
+                 :value="item.color.title">
           <span class="colors__value"
-                :style="'background-color: ' + color.code + ';'">
+                :style="'background-color: ' + item.color.code + ';'">
         </span>
         </label>
       </li>

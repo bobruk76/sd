@@ -2,7 +2,7 @@
   <aside class="filter">
     <h2 class="filter__title">Фильтры</h2>
 
-    <form class="filter__form form" action="#" method="get" @submit.prevent="submit">
+    <form class="filter__form form" action="#" method="get" @submit.prevent="onSubmit">
       <fieldset class="form__block">
         <legend class="form__legend">Цена</legend>
         <label class="form__label form__label--price">
@@ -119,7 +119,7 @@
       <button class="filter__submit button button--primery" type="submit">
         Применить
       </button>
-      <button class="filter__reset button button--second" type="button" @click.prevent="reset">
+      <button class="filter__reset button button--second" type="button" @click.prevent="onReset">
         Сбросить
       </button>
     </form>
@@ -128,18 +128,33 @@
 
 <script>
 import axios from 'axios';
-import { onMounted, ref, toRefs } from 'vue';
+import { onMounted, ref } from 'vue';
 import { API_BASE_URL } from '@/config';
 
 export default {
   props: ['priceFrom', 'priceTo', 'categoryId', 'page', 'colorId'],
-  setup(props) {
-    const currentPriceFrom = toRefs(props.priceFrom);
-    const currentPriceTo = toRefs(props.priceTo);
-    const currentCategoryId = toRefs(props.categoryId);
-    const currentColorId = toRefs(props.colorId);
+  setup(props, { emit: $emit }) {
+    const currentPriceFrom = ref(props.priceFrom);
+    const currentPriceTo = ref(props.priceTo);
+    const currentCategoryId = ref(props.categoryId);
+    const currentColorId = ref(props.colorId);
     const colors = ref(null);
     const categories = ref(null);
+
+    const onSubmit = () => {
+      $emit('update:page', 1);
+      $emit('update:priceFrom', currentPriceFrom.value);
+      $emit('update:priceTo', currentPriceTo.value);
+      $emit('update:categoryId', currentCategoryId.value);
+      $emit('update:colorId', currentColorId.value);
+    };
+    const onReset = () => {
+      $emit('update:page', 1);
+      $emit('update:priceFrom', 0);
+      $emit('update:priceTo', 0);
+      $emit('update:categoryId', 0);
+      $emit('update:colorId', 0);
+    };
     const onLoadParams = async () => {
       axios.get(`${API_BASE_URL}/productCategories`)
         .then((response) => { categories.value = response.data.items; });
@@ -154,6 +169,8 @@ export default {
       currentColorId,
       colors,
       categories,
+      onSubmit,
+      onReset,
     };
   },
   //

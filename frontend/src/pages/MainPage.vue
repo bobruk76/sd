@@ -11,11 +11,11 @@
 
     <div class="content__catalog">
       <product-filter
-        :price-from="filterPriceFrom"
-        :price-to="filterPriceTo"
-        :category-id="filterCategoryId"
-        :page="page"
-        :color-id="colorId"
+        v-model:price-from="filterPriceFrom"
+        v-model:price-to="filterPriceTo"
+        v-model:category-id="filterCategoryId"
+        v-model:page="page"
+        v-model:color-id="colorId"
       >
       </product-filter>
       <section class="catalog">
@@ -28,9 +28,8 @@
 
 <script>
 import {
-  computed, onMounted, ref, watch,
+  onMounted, ref, watch,
 } from 'vue';
-import { useRoute } from 'vue-router';
 import ProductList from '@/components/ProductList.vue';
 import BasePaginate from '@/components/BasePaginate.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
@@ -40,8 +39,7 @@ export default {
   props: ['pageParams'],
   components: { ProductList, BasePaginate, ProductFilter },
   setup() {
-    const $route = useRoute();
-    const filterCategoryId = computed(() => $route.params.categoryId);
+    const filterCategoryId = ref(0);
     const page = ref(1);
     const countPerPage = ref(4);
     const filterPriceFrom = ref(0);
@@ -59,8 +57,7 @@ export default {
       filterCategoryId,
     );
     onMounted(getProducts);
-    watch(page, getProducts);
-    watch(colorId, getProducts);
+    watch([page, colorId], getProducts);
     return {
       page,
       countPerPage,
