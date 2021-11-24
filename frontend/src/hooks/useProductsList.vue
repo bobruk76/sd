@@ -27,21 +27,21 @@ export default function () {
         limit: countPerPage.value,
         categoryId: filterCategoryId.value,
         colorId: colorId.value,
-        minPrice: filterPriceFrom.value,
-        maxPrice: filterPriceTo.value,
+        // ...(+filterPriceFrom.value > 0 ? null : { minPrice: filterPriceFrom.value }),
+        // ...(+filterPriceTo.value > 0 ? null : { maxPrice: filterPriceTo.value }),
       },
     })
       .then(
         (response) => {
           productsData.value = response.data.items.map((item) => ({
             ...item,
-            img: item.image.file.url,
+            img: item.preview.file.url,
           }));
           countProductPages.value = Math.ceil(countProducts.value / countPerPage);
         },
       )
       .catch((response) => {
-        console.log(response.error);
+        console.log(response);
       })
       .then(() => {
         $store.commit('preloaderChangeStatus', false);
