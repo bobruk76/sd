@@ -23,12 +23,12 @@ export default function () {
     clearTimeout(timeProductLoad);
     timeProductLoad.value = setTimeout(() => axios.get(`${API_BASE_URL}/products`, {
       params: {
-        page,
-        limit: countPerPage,
-        categoryId: filterCategoryId,
-        colorId,
-        minPrice: filterPriceFrom,
-        maxPrice: filterPriceTo,
+        page: page.value,
+        limit: countPerPage.value,
+        categoryId: filterCategoryId.value,
+        colorId: colorId.value,
+        minPrice: filterPriceFrom.value,
+        maxPrice: filterPriceTo.value,
       },
     })
       .then(
