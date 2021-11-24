@@ -5,7 +5,7 @@
         Каталог
       </h1>
       <span class="content__info">
-        152 товара
+        !!!!очень много!!!! товара
       </span>
     </div>
 
@@ -46,19 +46,16 @@ export default {
     const filterPriceTo = ref(0);
     const colorId = ref(0);
     const {
-      products,
-      countProducts,
-      countProductPages,
-      fetchProducts,
+      products, countProducts, countProductPages, fetchProducts,
     } = useProductsList();
-    fetchProducts({
+    fetchProducts(
       page,
       countPerPage,
       filterPriceFrom,
       filterPriceTo,
       colorId,
       filterCategoryId,
-    });
+    );
     return {
       page,
       countPerPage,
@@ -69,6 +66,7 @@ export default {
       products,
       countProducts,
       countProductPages,
+      fetchProducts,
     };
   },
 
