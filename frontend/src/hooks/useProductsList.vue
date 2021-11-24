@@ -27,8 +27,8 @@ export default function () {
         limit: countPerPage.value,
         categoryId: filterCategoryId.value,
         colorId: colorId.value,
-        // ...(+filterPriceFrom.value > 0 ? null : { minPrice: filterPriceFrom.value }),
-        // ...(+filterPriceTo.value > 0 ? null : { maxPrice: filterPriceTo.value }),
+        ...(+filterPriceFrom.value > 0 ? { minPrice: filterPriceFrom.value } : null),
+        ...(+filterPriceTo.value > 0 ? { maxPrice: filterPriceTo.value } : null),
       },
     })
       .then(
@@ -37,7 +37,9 @@ export default function () {
             ...item,
             img: item.preview.file.url,
           }));
-          countProductPages.value = Math.ceil(countProducts.value / countPerPage);
+          countProductPages.value = response.data.pagination.pages;
+          // page.value = response.data.pagination.page;
+          // countPerPage.value = response.data.pagination.page;
         },
       )
       .catch((response) => {
