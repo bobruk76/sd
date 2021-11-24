@@ -1,7 +1,7 @@
 <script>
 import axios from 'axios';
 import { useStore } from 'vuex';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { API_BASE_URL } from '@/config';
 
 export default function () {
@@ -9,8 +9,7 @@ export default function () {
   const timeProductLoad = ref(null);
   const productsData = ref(null);
   const countProductPages = ref(0);
-  const countProducts = computed(() => productsData.value.pagination.total);
-
+  const totalProducts = ref(0);
   const fetchProducts = (
     page,
     countPerPage,
@@ -38,6 +37,7 @@ export default function () {
             img: item.preview.file.url,
           }));
           countProductPages.value = response.data.pagination.pages;
+          totalProducts.value = response.data.pagination.total;
           // page.value = response.data.pagination.page;
           // countPerPage.value = response.data.pagination.page;
         },
@@ -52,7 +52,7 @@ export default function () {
 
   return {
     products: productsData,
-    countProducts,
+    totalProducts,
     countProductPages,
     fetchProducts,
   };

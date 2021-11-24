@@ -5,7 +5,7 @@
         Каталог
       </h1>
       <span class="content__info">
-        !!!!очень много!!!! товара
+        Количество товаров {{ totalProducts }}
       </span>
     </div>
 
@@ -27,7 +27,9 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue';
+import {
+  computed, onMounted, ref, watch,
+} from 'vue';
 import { useRoute } from 'vue-router';
 import ProductList from '@/components/ProductList.vue';
 import BasePaginate from '@/components/BasePaginate.vue';
@@ -46,9 +48,9 @@ export default {
     const filterPriceTo = ref(0);
     const colorId = ref(0);
     const {
-      products, countProducts, countProductPages, fetchProducts,
+      products, totalProducts, countProductPages, fetchProducts,
     } = useProductsList();
-    fetchProducts(
+    const getProducts = async () => fetchProducts(
       page,
       countPerPage,
       filterPriceFrom,
@@ -56,6 +58,9 @@ export default {
       colorId,
       filterCategoryId,
     );
+    onMounted(getProducts);
+    watch(page, getProducts);
+    watch(colorId, getProducts);
     return {
       page,
       countPerPage,
@@ -64,7 +69,7 @@ export default {
       colorId,
       filterCategoryId,
       products,
-      countProducts,
+      totalProducts,
       countProductPages,
       fetchProducts,
     };
