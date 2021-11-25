@@ -59,8 +59,11 @@
           <li class="check-list__item" v-for="item in items.availableValues" :key="item.value">
             <label class="check-list__label">
               <input class="check-list__check sr-only"
-                     type="checkbox" name="volume"
-                     value="tem.value">
+                     type="checkbox"
+                     :name="item.value"
+                     :value="item.value"
+                     v-model="formFields[items.code]"
+              >
               <span class="check-list__desc">
                     {{ item.value }}
                     <span>({{ item.productsCount }})</span>
@@ -90,6 +93,7 @@ import { API_BASE_URL } from '@/config';
 export default {
   props: ['priceFrom', 'priceTo', 'categoryId', 'page', 'colorId'],
   setup(props, { emit: $emit }) {
+    const formFields = ref({});
     const currentPriceFrom = ref(props.priceFrom);
     const currentPriceTo = ref(props.priceTo);
     const currentCategoryId = ref(props.categoryId);
@@ -128,6 +132,7 @@ export default {
     watch(currentCategoryId, onLoadProductProps);
     onMounted(onLoadParams);
     return {
+      formFields,
       currentPriceFrom,
       currentPriceTo,
       currentCategoryId,
