@@ -30,90 +30,44 @@
         </label>
       </fieldset>
 
-      <fieldset class="form__block">
-        <legend class="form__legend">Цвет</legend>
-        <ul class="colors">
+<!--      <fieldset class="form__block">-->
+<!--        <legend class="form__legend">Цвет</legend>-->
+<!--        <ul class="colors">-->
 
-          <li class="colors__item" v-for="item in colors"
-              :key="item.id"
-              :value="item.id">
-            <label class="colors__label">
-              <input
-                class="colors__radio sr-only"
-                type="radio"
-                name="color"
-                :value="item.id"
-                v-model.number="currentColorId"
-              >
-              <span class="colors__value" :style="'background-color: ' + item.code + ';'">
-                  </span>
-            </label>
-          </li>
+<!--          <li class="colors__item" v-for="item in colors"-->
+<!--              :key="item.id"-->
+<!--              :value="item.id">-->
+<!--            <label class="colors__label">-->
+<!--              <input-->
+<!--                class="colors__radio sr-only"-->
+<!--                type="radio"-->
+<!--                name="color"-->
+<!--                :value="item.id"-->
+<!--                v-model.number="currentColorId"-->
+<!--              >-->
+<!--              <span class="colors__value" :style="'background-color: ' + item.code + ';'">-->
+<!--                  </span>-->
+<!--            </label>-->
+<!--          </li>-->
 
-        </ul>
-      </fieldset>
+<!--        </ul>-->
+<!--      </fieldset>-->
 
-      <fieldset class="form__block">
-        <legend class="form__legend">Объемб в ГБ</legend>
+      <fieldset class="form__block" v-for="items in productProps" :key="items.id">
+        <legend class="form__legend">{{ items.title }}</legend>
         <ul class="check-list">
-          <li class="check-list__item">
+          <li class="check-list__item" v-for="item in items.availableValues" :key="item.value">
             <label class="check-list__label">
-              <input class="check-list__check sr-only" type="checkbox" name="volume" value="8"
-                     checked="">
+              <input class="check-list__check sr-only"
+                     type="checkbox" name="volume"
+                     value="tem.value">
               <span class="check-list__desc">
-                    8
-                    <span>(313)</span>
+                    {{ item.value }}
+                    <span>({{ item.productsCount }})</span>
                   </span>
             </label>
           </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" type="checkbox" name="volume" value="16">
-              <span class="check-list__desc">
-                    16
-                    <span>(461)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" type="checkbox" name="volume" value="32">
-              <span class="check-list__desc">
-                    32
-                    <span>(313)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" type="checkbox" name="volume" value="64">
-              <span class="check-list__desc">
-                    64
-                    <span>(313)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" type="checkbox" name="volume"
-                     value="128">
-              <span class="check-list__desc">
-                    128
-                    <span>(313)</span>
-                  </span>
-            </label>
-          </li>
-          <li class="check-list__item">
-            <label class="check-list__label">
-              <input class="check-list__check sr-only" type="checkbox" name="volume"
-                     value="264">
-              <span class="check-list__desc">
-                    264
-                    <span>(313)</span>
-                  </span>
-            </label>
-          </li>
-        </ul>
+         </ul>
       </fieldset>
 
       <button class="filter__submit button button--primery" type="submit">
@@ -128,7 +82,9 @@
 
 <script>
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import {
+  onMounted, ref, watch,
+} from 'vue';
 import { API_BASE_URL } from '@/config';
 
 export default {
@@ -137,6 +93,8 @@ export default {
     const currentPriceFrom = ref(props.priceFrom);
     const currentPriceTo = ref(props.priceTo);
     const currentCategoryId = ref(props.categoryId);
+    const productProps = ref(null);
+
     const currentColorId = ref(props.colorId);
     const colors = ref(null);
     const categories = ref(null);
@@ -161,6 +119,13 @@ export default {
       axios.get(`${API_BASE_URL}/colors`)
         .then((response) => { colors.value = response.data.items; });
     };
+    const onLoadProductProps = async () => {
+      axios.get(`${API_BASE_URL}/productCategories/${currentCategoryId.value}`)
+        .then((response) => {
+          productProps.value = response.data.productProps;
+        });
+    };
+    watch(currentCategoryId, onLoadProductProps);
     onMounted(onLoadParams);
     return {
       currentPriceFrom,
@@ -169,80 +134,10 @@ export default {
       currentColorId,
       colors,
       categories,
+      productProps,
       onSubmit,
       onReset,
     };
   },
-  //
-  // data() {
-  //   return {
-  //     currentPriceFrom: 0,
-  //     currentPriceTo: 0,
-  //     currentCategoryId: 0,
-  //     currentColorId: 0,
-  //     colorsData: null,
-  //     categoriesData: null,
-  //   };
-  // },
-  // methods: {
-  //   submit() {
-  //     this.$emit('update:page', 1);
-  //     this.$emit('update:priceFrom', this.currentPriceFrom);
-  //     this.$emit('update:priceTo', this.currentPriceTo);
-  //     this.$emit('update:categoryId', this.currentCategoryId);
-  //     this.$emit('update:colorId', this.currentColorId);
-  //   },
-  //
-  //   reset() {
-  //     this.$emit('update:page', 1);
-  //     this.$emit('update:priceFrom', 0);
-  //     this.$emit('update:priceTo', 0);
-  //     this.$emit('update:categoryId', 0);
-  //     this.$emit('update:colorId', 0);
-  //   },
-  //
-  //   loadCategories() {
-  //     axios.get(`${API_BASE_URL}/productCategories`).then(
-  //       (response) => {
-  //         this.categoriesData = response.data;
-  //       },
-  //     );
-  //   },
-  //
-  //   loadColors() {
-  //     axios.get(`${API_BASE_URL}/colors`).then(
-  //       (response) => {
-  //         this.colorsData = response.data;
-  //       },
-  //     );
-  //   },
-  // },
-  // watch: {
-  //   priceFrom(value) {
-  //     this.currentPriceFrom = value;
-  //   },
-  //   priceTo(value) {
-  //     this.currentPriceTo = value;
-  //   },
-  //   categoryId(value) {
-  //     this.currentCategoryId = value;
-  //   },
-  // },
-  //
-  // computed: {
-  //   categories() {
-  //     return this.categoriesData ? this.categoriesData.items : [];
-  //   },
-  //
-  //   colors() {
-  //     return this.colorsData ? this.colorsData.items : [];
-  //   },
-  // },
-  //
-  // created() {
-  //   this.currentCategoryId = this.categoryId;
-  //   this.loadCategories();
-  //   this.loadColors();
-  // },
 };
 </script>
