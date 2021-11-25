@@ -38,8 +38,6 @@ export default function () {
           }));
           countProductPages.value = response.data.pagination.pages;
           totalProducts.value = response.data.pagination.total;
-          // page.value = response.data.pagination.page;
-          // countPerPage.value = response.data.pagination.page;
         },
       )
       .catch((response) => {

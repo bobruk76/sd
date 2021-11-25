@@ -10,7 +10,7 @@
         <li class="breadcrumbs__item">
           <router-link
             class="breadcrumbs__link"
-            :to="{name: 'main', params : {categoryId: product.categoryId}}">
+            :to="{ name: 'main', params : { categoryId: category.id } }">
             {{ category.title }}
           </router-link>
         </li>
@@ -46,15 +46,15 @@
               <legend class="form__legend">Цвет:</legend>
               <ul class="colors">
 
-                <li class="colors__item" v-for="color in product.colors" :key="color.id">
+                <li class="colors__item" v-for="item in product.colors" :key="item.color.id">
                   <label class="colors__label">
                     <input class="colors__radio sr-only"
                            type="radio"
                            name="color-item"
-                           :value="color.title"
+                           :value="item.color.title"
                     >
                     <span class="colors__value"
-                          :style="'background-color: ' + color.code + ';'">
+                          :style="'background-color: ' + item.color.code + ';'">
                     </span>
                   </label>
                 </li>

@@ -12,31 +12,37 @@ const routes = [
     path: '/',
     name: 'main',
     component: MainPage,
+    meta: { title: 'Технозавррр' },
   },
   {
     path: '/product/:id',
     name: 'product',
     component: ProductPage,
+    meta: { title: 'Технозавррр' },
   },
   {
     path: '/cart/',
     name: 'cart',
     component: CartPage,
+    meta: { title: 'Технозавррр' },
   },
   {
     path: '/order/',
     name: 'order',
     component: OrderPage,
+    meta: { title: 'Технозавррр' },
   },
   {
     path: '/order/:id',
     name: 'orderInfo',
     component: OrderInfoPage,
+    meta: { title: 'Технозавррр' },
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'notFound',
     component: NotFoundPage,
+    meta: { title: 'Технозавррр' },
   },
 ];
 

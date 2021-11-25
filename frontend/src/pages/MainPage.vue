@@ -28,17 +28,18 @@
 
 <script>
 import {
-  onMounted, ref, watch,
+  onBeforeMount, onMounted, ref, watch,
 } from 'vue';
+import { useRoute } from 'vue-router';
 import ProductList from '@/components/ProductList.vue';
 import BasePaginate from '@/components/BasePaginate.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
 import useProductsList from '@/hooks/useProductsList.vue';
 
 export default {
-  props: ['pageParams'],
   components: { ProductList, BasePaginate, ProductFilter },
   setup() {
+    const $route = useRoute();
     const filterCategoryId = ref(0);
     const page = ref(1);
     const countPerPage = ref(4);
@@ -56,8 +57,11 @@ export default {
       colorId,
       filterCategoryId,
     );
+    onBeforeMount(() => {
+      filterCategoryId.value = ('categoryId' in $route.params) ? $route.params.categoryId : 0;
+    });
     onMounted(getProducts);
-    watch([page, colorId], getProducts);
+    watch([page, colorId, filterCategoryId, filterPriceFrom, filterPriceTo], getProducts);
     return {
       page,
       countPerPage,
