@@ -15,8 +15,9 @@ export default function () {
     countPerPage,
     filterPriceFrom,
     filterPriceTo,
-    colorId,
+    // colorId,
     filterCategoryId,
+    productProps,
   ) => {
     $store.commit('preloaderChangeStatus', true);
     clearTimeout(timeProductLoad);
@@ -25,9 +26,16 @@ export default function () {
         page: page.value,
         limit: countPerPage.value,
         categoryId: filterCategoryId.value,
-        colorId: colorId.value,
+        // colorId: colorId.value,
         ...(+filterPriceFrom.value > 0 ? { minPrice: filterPriceFrom.value } : null),
         ...(+filterPriceTo.value > 0 ? { maxPrice: filterPriceTo.value } : null),
+        // ...(productProps.value === null ? null : {
+        //   props: Object.keys(productProps.value).map((key) => [
+        //     key, productProps.value[key],
+        //   ]),
+        // }),
+
+        ...(productProps.value === null ? null : { props: JSON.stringify(productProps.value) }),
       },
     })
       .then(

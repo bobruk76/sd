@@ -53,7 +53,7 @@
 <!--        </ul>-->
 <!--      </fieldset>-->
 
-      <fieldset class="form__block" v-for="items in productProps" :key="items.id">
+      <fieldset class="form__block" v-for="items in currentProductProps" :key="items.id">
         <legend class="form__legend">{{ items.title }}</legend>
         <ul class="check-list">
           <li class="check-list__item" v-for="item in items.availableValues" :key="item.value">
@@ -91,15 +91,15 @@ import {
 import { API_BASE_URL } from '@/config';
 
 export default {
-  props: ['priceFrom', 'priceTo', 'categoryId', 'page', 'colorId'],
+  props: ['priceFrom', 'priceTo', 'categoryId', 'page', 'colorId', 'productProps'],
   setup(props, { emit: $emit }) {
     const formFields = ref({});
     const currentPriceFrom = ref(props.priceFrom);
     const currentPriceTo = ref(props.priceTo);
     const currentCategoryId = ref(props.categoryId);
-    const productProps = ref(null);
+    const currentProductProps = ref({});
 
-    const currentColorId = ref(props.colorId);
+    // const currentColorId = ref(props.colorId);
     // const colors = ref(null);
     const categories = ref(null);
 
@@ -108,14 +108,17 @@ export default {
       $emit('update:priceFrom', currentPriceFrom.value);
       $emit('update:priceTo', currentPriceTo.value);
       $emit('update:categoryId', currentCategoryId.value);
-      $emit('update:colorId', currentColorId.value);
+      // $emit('update:colorId', currentColorId.value);
+      $emit('update:productProps', formFields.value);
     };
     const onReset = () => {
+      currentProductProps.value = {};
       $emit('update:page', 1);
       $emit('update:priceFrom', 0);
       $emit('update:priceTo', 0);
       $emit('update:categoryId', 0);
-      $emit('update:colorId', 0);
+      // $emit('update:colorId', 0);
+      $emit('update:productProps', null);
     };
     const onLoadParams = async () => {
       axios.get(`${API_BASE_URL}/productCategories`)
@@ -127,8 +130,8 @@ export default {
       axios.get(`${API_BASE_URL}/productCategories/${currentCategoryId.value}`)
         .then((response) => {
           formFields.value = {};
-          productProps.value = response.data.productProps;
-          productProps.value.forEach((obj) => {
+          currentProductProps.value = response.data.productProps;
+          currentProductProps.value.forEach((obj) => {
             formFields.value[obj.code] = [];
           });
         });
@@ -140,10 +143,10 @@ export default {
       currentPriceFrom,
       currentPriceTo,
       currentCategoryId,
-      currentColorId,
+      // currentColorId,
       // colors,
       categories,
-      productProps,
+      currentProductProps,
       onSubmit,
       onReset,
     };

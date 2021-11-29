@@ -14,6 +14,7 @@
         v-model:price-from="filterPriceFrom"
         v-model:price-to="filterPriceTo"
         v-model:category-id="filterCategoryId"
+        v-model:product-props="productProps"
         v-model:page="page"
         v-model:color-id="colorId"
       >
@@ -45,23 +46,29 @@ export default {
     const countPerPage = ref(4);
     const filterPriceFrom = ref(0);
     const filterPriceTo = ref(0);
+    const productProps = ref(null);
     const colorId = ref(0);
     const {
       products, totalProducts, countProductPages, fetchProducts,
     } = useProductsList();
-    const getProducts = async () => fetchProducts(
-      page,
-      countPerPage,
-      filterPriceFrom,
-      filterPriceTo,
-      colorId,
-      filterCategoryId,
-    );
+    const getProducts = async () => {
+      fetchProducts(
+        page,
+        countPerPage,
+        filterPriceFrom,
+        filterPriceTo,
+        // colorId,
+        filterCategoryId,
+        productProps,
+      );
+    };
     onBeforeMount(() => {
       filterCategoryId.value = ('categoryId' in $route.params) ? $route.params.categoryId : 0;
     });
     onMounted(getProducts);
-    watch([page, colorId, filterCategoryId, filterPriceFrom, filterPriceTo], getProducts);
+    watch([
+      page, colorId, filterCategoryId, filterPriceFrom, filterPriceTo, productProps,
+    ], getProducts);
     return {
       page,
       countPerPage,
@@ -69,6 +76,7 @@ export default {
       filterPriceTo,
       colorId,
       filterCategoryId,
+      productProps,
       products,
       totalProducts,
       countProductPages,
