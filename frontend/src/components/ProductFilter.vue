@@ -100,7 +100,7 @@ export default {
     const productProps = ref(null);
 
     const currentColorId = ref(props.colorId);
-    const colors = ref(null);
+    // const colors = ref(null);
     const categories = ref(null);
 
     const onSubmit = () => {
@@ -120,13 +120,17 @@ export default {
     const onLoadParams = async () => {
       axios.get(`${API_BASE_URL}/productCategories`)
         .then((response) => { categories.value = response.data.items; });
-      axios.get(`${API_BASE_URL}/colors`)
-        .then((response) => { colors.value = response.data.items; });
+      // axios.get(`${API_BASE_URL}/colors`)
+      //   .then((response) => { colors.value = response.data.items; });
     };
     const onLoadProductProps = async () => {
       axios.get(`${API_BASE_URL}/productCategories/${currentCategoryId.value}`)
         .then((response) => {
+          formFields.value = {};
           productProps.value = response.data.productProps;
+          productProps.value.forEach((obj) => {
+            formFields.value[obj.code] = [];
+          });
         });
     };
     watch(currentCategoryId, onLoadProductProps);
@@ -137,7 +141,7 @@ export default {
       currentPriceTo,
       currentCategoryId,
       currentColorId,
-      colors,
+      // colors,
       categories,
       productProps,
       onSubmit,
