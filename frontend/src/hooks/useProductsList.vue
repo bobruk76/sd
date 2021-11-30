@@ -17,7 +17,7 @@ export default function () {
     filterPriceFrom,
     filterPriceTo,
     filterCategoryId,
-    productProps,
+    filterProductProps,
   ) => {
     $store.commit('preloaderChangeStatus', true);
     clearTimeout(timeProductLoad);
@@ -28,7 +28,7 @@ export default function () {
         categoryId: filterCategoryId.value,
         ...(+filterPriceFrom.value > 0 ? { minPrice: filterPriceFrom.value } : null),
         ...(+filterPriceTo.value > 0 ? { maxPrice: filterPriceTo.value } : null),
-        ...(productProps.value === null ? null : { props: productProps.value }),
+        ...(filterProductProps.value === null ? null : { props: filterProductProps.value }),
       },
       paramsSerializer: (params) => qs.stringify(params),
     })

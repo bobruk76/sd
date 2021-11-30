@@ -2,7 +2,7 @@
   <aside class="filter">
     <h2 class="filter__title">Фильтры</h2>
 
-    <form class="filter__form form" action="#" method="get" @submit.prevent="onSubmit">
+    <form class="filter__form form">
       <fieldset class="form__block">
         <legend class="form__legend">Цена</legend>
         <label class="form__label form__label--price">
@@ -49,7 +49,7 @@
          </ul>
       </fieldset>
 
-      <button class="filter__submit button button--primery" type="submit">
+      <button class="filter__submit button button--primery" type="submit" @click.prevent="onSubmit">
         Применить
       </button>
       <button class="filter__reset button button--second" type="button" @click.prevent="onReset">
@@ -73,7 +73,7 @@ export default {
     const currentPriceFrom = ref(props.priceFrom);
     const currentPriceTo = ref(props.priceTo);
     const currentCategoryId = ref(props.categoryId);
-    const currentProductProps = ref(props.productProps);
+    const currentProductProps = ref(null);
     const categories = ref(null);
 
     const onSubmit = () => {
@@ -93,7 +93,7 @@ export default {
       $emit('update:priceFrom', 0);
       $emit('update:priceTo', 0);
       $emit('update:categoryId', 0);
-      $emit('update:productProps', null);
+      $emit('update:productProps', {});
     };
     const onLoadParams = async () => {
       axios.get(`${API_BASE_URL}/productCategories`)

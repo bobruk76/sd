@@ -14,7 +14,7 @@
         v-model:price-from="filterPriceFrom"
         v-model:price-to="filterPriceTo"
         v-model:category-id="filterCategoryId"
-        v-model:product-props="productProps"
+        v-model:product-props="filterProductProps"
         v-model:page="page"
       >
       </product-filter>
@@ -45,7 +45,7 @@ export default {
     const countPerPage = ref(4);
     const filterPriceFrom = ref(0);
     const filterPriceTo = ref(0);
-    const productProps = ref(null);
+    const filterProductProps = ref({});
     const {
       products, totalProducts, countProductPages, fetchProducts,
     } = useProductsList();
@@ -56,7 +56,7 @@ export default {
         filterPriceFrom,
         filterPriceTo,
         filterCategoryId,
-        productProps,
+        filterProductProps,
       );
     };
     onBeforeMount(() => {
@@ -64,15 +64,15 @@ export default {
     });
     onMounted(getProducts);
     watch([
-      page, filterCategoryId, filterPriceFrom, filterPriceTo, productProps,
-    ], getProducts);
+      page, filterCategoryId, filterPriceFrom, filterPriceTo, filterProductProps,
+    ], getProducts, { deep: true });
     return {
       page,
       countPerPage,
       filterPriceFrom,
       filterPriceTo,
       filterCategoryId,
-      productProps,
+      filterProductProps,
       products,
       totalProducts,
       countProductPages,
