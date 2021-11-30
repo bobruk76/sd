@@ -29,30 +29,6 @@
           </select>
         </label>
       </fieldset>
-
-<!--      <fieldset class="form__block">-->
-<!--        <legend class="form__legend">Цвет</legend>-->
-<!--        <ul class="colors">-->
-
-<!--          <li class="colors__item" v-for="item in colors"-->
-<!--              :key="item.id"-->
-<!--              :value="item.id">-->
-<!--            <label class="colors__label">-->
-<!--              <input-->
-<!--                class="colors__radio sr-only"-->
-<!--                type="radio"-->
-<!--                name="color"-->
-<!--                :value="item.id"-->
-<!--                v-model.number="currentColorId"-->
-<!--              >-->
-<!--              <span class="colors__value" :style="'background-color: ' + item.code + ';'">-->
-<!--                  </span>-->
-<!--            </label>-->
-<!--          </li>-->
-
-<!--        </ul>-->
-<!--      </fieldset>-->
-
       <fieldset class="form__block" v-for="items in currentProductProps" :key="items.id">
         <legend class="form__legend">{{ items.title }}</legend>
         <ul class="check-list">
@@ -98,9 +74,6 @@ export default {
     const currentPriceTo = ref(props.priceTo);
     const currentCategoryId = ref(props.categoryId);
     const currentProductProps = ref({});
-
-    // const currentColorId = ref(props.colorId);
-    // const colors = ref(null);
     const categories = ref(null);
 
     const onSubmit = () => {
@@ -108,7 +81,6 @@ export default {
       $emit('update:priceFrom', currentPriceFrom.value);
       $emit('update:priceTo', currentPriceTo.value);
       $emit('update:categoryId', currentCategoryId.value);
-      // $emit('update:colorId', currentColorId.value);
       $emit('update:productProps', formFields.value);
     };
     const onReset = () => {
@@ -143,8 +115,6 @@ export default {
       currentPriceFrom,
       currentPriceTo,
       currentCategoryId,
-      // currentColorId,
-      // colors,
       categories,
       currentProductProps,
       onSubmit,

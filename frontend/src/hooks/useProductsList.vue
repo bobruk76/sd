@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import qs from 'qs';
 import { useStore } from 'vuex';
 import { ref } from 'vue';
 import { API_BASE_URL } from '@/config';
@@ -15,7 +16,6 @@ export default function () {
     countPerPage,
     filterPriceFrom,
     filterPriceTo,
-    // colorId,
     filterCategoryId,
     productProps,
   ) => {
@@ -26,17 +26,11 @@ export default function () {
         page: page.value,
         limit: countPerPage.value,
         categoryId: filterCategoryId.value,
-        // colorId: colorId.value,
         ...(+filterPriceFrom.value > 0 ? { minPrice: filterPriceFrom.value } : null),
         ...(+filterPriceTo.value > 0 ? { maxPrice: filterPriceTo.value } : null),
-        // ...(productProps.value === null ? null : {
-        //   props: Object.keys(productProps.value).map((key) => [
-        //     key, productProps.value[key],
-        //   ]),
-        // }),
-
-        ...(productProps.value === null ? null : { props: JSON.stringify(productProps.value) }),
+        ...(productProps.value === null ? null : { props: productProps.value }),
       },
+      paramsSerializer: (params) => qs.stringify(params),
     })
       .then(
         (response) => {
