@@ -46,6 +46,7 @@ export default {
     const filterPriceFrom = ref(0);
     const filterPriceTo = ref(0);
     const filterProductProps = ref({});
+
     const {
       products, totalProducts, countProductPages, fetchProducts,
     } = useProductsList();
@@ -64,8 +65,12 @@ export default {
     });
     onMounted(getProducts);
     watch([
-      page, filterCategoryId, filterPriceFrom, filterPriceTo, filterProductProps,
-    ], getProducts, { deep: true });
+      page, filterCategoryId, filterPriceFrom, filterPriceTo,
+    ], (newValue, oldValue) => {
+      console.log(oldValue, newValue);
+      getProducts();
+    });
+
     return {
       page,
       countPerPage,

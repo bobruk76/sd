@@ -29,7 +29,7 @@
           </select>
         </label>
       </fieldset>
-      <fieldset class="form__block" v-for="items in currentProductProps" :key="items.id">
+      <fieldset class="form__block" v-for="items in categoryProductProps" :key="items.id">
         <legend class="form__legend">{{ items.title }}</legend>
         <ul class="check-list">
           <li class="check-list__item" v-for="item in items.availableValues" :key="item.value">
@@ -69,11 +69,11 @@ import { API_BASE_URL } from '@/config';
 export default {
   props: ['priceFrom', 'priceTo', 'categoryId', 'page', 'productProps'],
   setup(props, { emit: $emit }) {
-    const formFields = ref({});
+    const formFields = ref(props.productProps);
     const currentPriceFrom = ref(props.priceFrom);
     const currentPriceTo = ref(props.priceTo);
     const currentCategoryId = ref(props.categoryId);
-    const currentProductProps = ref(null);
+    const categoryProductProps = ref(null);
     const categories = ref(null);
 
     const onSubmit = () => {
@@ -87,13 +87,9 @@ export default {
       currentPriceFrom.value = 0;
       currentPriceTo.value = 0;
       currentCategoryId.value = 0;
-      currentProductProps.value = {};
-
-      $emit('update:page', 1);
-      $emit('update:priceFrom', 0);
-      $emit('update:priceTo', 0);
-      $emit('update:categoryId', 0);
-      $emit('update:productProps', {});
+      categoryProductProps.value = {};
+      formFields.value = {};
+      onSubmit();
     };
     const onLoadParams = async () => {
       axios.get(`${API_BASE_URL}/productCategories`)
@@ -101,12 +97,12 @@ export default {
     };
     const onLoadProductProps = async () => {
       formFields.value = {};
-      currentProductProps.value = {};
+      categoryProductProps.value = {};
       if (+currentCategoryId.value > 0) {
         axios.get(`${API_BASE_URL}/productCategories/${currentCategoryId.value}`)
           .then((response) => {
-            currentProductProps.value = response.data.productProps;
-            currentProductProps.value.forEach((obj) => {
+            categoryProductProps.value = response.data.productProps;
+            categoryProductProps.value.forEach((obj) => {
               formFields.value[obj.code] = [];
             });
           });
@@ -120,7 +116,7 @@ export default {
       currentPriceTo,
       currentCategoryId,
       categories,
-      currentProductProps,
+      categoryProductProps,
       onSubmit,
       onReset,
     };
