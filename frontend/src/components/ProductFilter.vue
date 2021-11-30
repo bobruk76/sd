@@ -67,13 +67,13 @@ import {
 import { API_BASE_URL } from '@/config';
 
 export default {
-  props: ['priceFrom', 'priceTo', 'categoryId', 'page', 'colorId', 'productProps'],
+  props: ['priceFrom', 'priceTo', 'categoryId', 'page', 'productProps'],
   setup(props, { emit: $emit }) {
     const formFields = ref({});
     const currentPriceFrom = ref(props.priceFrom);
     const currentPriceTo = ref(props.priceTo);
     const currentCategoryId = ref(props.categoryId);
-    const currentProductProps = ref({});
+    const currentProductProps = ref(props.productProps);
     const categories = ref(null);
 
     const onSubmit = () => {
@@ -84,29 +84,33 @@ export default {
       $emit('update:productProps', formFields.value);
     };
     const onReset = () => {
+      currentPriceFrom.value = 0;
+      currentPriceTo.value = 0;
+      currentCategoryId.value = 0;
       currentProductProps.value = {};
+
       $emit('update:page', 1);
       $emit('update:priceFrom', 0);
       $emit('update:priceTo', 0);
       $emit('update:categoryId', 0);
-      // $emit('update:colorId', 0);
       $emit('update:productProps', null);
     };
     const onLoadParams = async () => {
       axios.get(`${API_BASE_URL}/productCategories`)
         .then((response) => { categories.value = response.data.items; });
-      // axios.get(`${API_BASE_URL}/colors`)
-      //   .then((response) => { colors.value = response.data.items; });
     };
     const onLoadProductProps = async () => {
-      axios.get(`${API_BASE_URL}/productCategories/${currentCategoryId.value}`)
-        .then((response) => {
-          formFields.value = {};
-          currentProductProps.value = response.data.productProps;
-          currentProductProps.value.forEach((obj) => {
-            formFields.value[obj.code] = [];
+      formFields.value = {};
+      currentProductProps.value = {};
+      if (+currentCategoryId.value > 0) {
+        axios.get(`${API_BASE_URL}/productCategories/${currentCategoryId.value}`)
+          .then((response) => {
+            currentProductProps.value = response.data.productProps;
+            currentProductProps.value.forEach((obj) => {
+              formFields.value[obj.code] = [];
+            });
           });
-        });
+      }
     };
     watch(currentCategoryId, onLoadProductProps);
     onMounted(onLoadParams);
