@@ -193,12 +193,15 @@ export default {
       $store.commit('preloaderChangeStatus', true);
       if (productAmount.value > 0) {
         $store.dispatch('addProductToCart', {
-          productId: product.value.id,
-          amount: productAmount.value,
-        }).then(() => {
-          productAdded.value = true;
+          productOfferId: productOfferId.value,
+          colorId: currentColorId.value,
+          quantity: productAmount.value,
         })
-          .catch(() => {
+          .then(() => {
+            productAdded.value = true;
+          })
+          .catch((error) => {
+            console.log(error);
           })
           .then(() => {
             $store.commit('preloaderChangeStatus', false);

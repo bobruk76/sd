@@ -116,14 +116,16 @@ export default createStore({
     },
 
     addProductToCart(context, {
-      productId,
-      amount,
+      productOfferId,
+      colorId,
+      quantity,
     }) {
-      return new Promise(((resolve) => setTimeout(resolve, 2500)))
+      return new Promise(((resolve) => setTimeout(resolve, 0)))
         .then(() => (
           axios.post(`${API_BASE_URL}/baskets/products`, {
-            productId,
-            quantity: amount,
+            productOfferId,
+            colorId,
+            quantity,
           }, {
             params: {
               userAccessKey: context.state.userKey,
@@ -134,6 +136,9 @@ export default createStore({
                 context.commit('updateCartProducts', response.data.items);
               },
             )
+            .catch((error) => {
+              console.log(error);
+            })
         ));
     },
 
