@@ -32,14 +32,14 @@
       </div>
 
       <div class="item__info">
-        <span class="item__code">Артикул: {{ product.id }}</span>
+        <span class="item__code">Артикул: {{ currentOffer.id }}</span>
         <h2 class="item__title">
           {{ currentOffer.title }}
         </h2>
         <div class="item__form">
           <form class="form" action="#" method="POST">
             <b class="item__price">
-              {{ product.productPrice }} ₽
+              {{ currentOffer.productPrice }} ₽
             </b>
 
             <fieldset class="form__block">
@@ -161,6 +161,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import useProduct from '@/hooks/useProduct.vue';
+import numberFormat from '@/helpers/numberFormat';
 
 export default {
   setup() {
@@ -176,7 +177,11 @@ export default {
     const productOfferId = ref(null);
     const currentOffer = computed(() => {
       const { offers } = product.value;
-      return offers.find((item) => item.id === productOfferId.value) || {};
+      const offer = offers.find((item) => item.id === productOfferId.value) || {};
+
+      return Object.assign(offer, {
+        productPrice: numberFormat(offer.price),
+      });
     });
     const doIncrementProduct = () => {
       productAmount.value += 1;
