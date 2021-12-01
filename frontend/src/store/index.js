@@ -19,10 +19,11 @@ export default createStore({
     updateCartProducts(state, cartProducts) {
       state.cartProducts = cartProducts.map((item) => ({
         ...item,
-        productId: item.product.id,
+        title: item.productOffer.title,
+        productId: item.productOffer.product.id,
         amount: item.quantity,
         totalPrice: item.quantity * item.price,
-        img: item.product.image.file.url,
+        img: item.productOffer.product.preview.file.url,
       }));
     },
 
@@ -104,10 +105,9 @@ export default createStore({
             context.commit('updateCartProducts', response.data.items);
           },
         )
-        .catch(
-          () => {
-          },
-        )
+        .catch((error) => {
+          console.log(error);
+        })
         .then(
           () => {
             context.commit('preloaderChangeStatus', false);
@@ -224,8 +224,9 @@ export default createStore({
     },
 
     cartTotalSum(state) {
-      return state.cartProducts ? state.cartProducts.reduce((sum, item) => sum
-        + item.totalPrice, 0) : 0;
+      return state.cartProducts ? state.cartProducts.reduce(
+        (sum, item) => sum + item.totalPrice, 0,
+      ) : 0;
     },
 
     getOrderInfo(state) {

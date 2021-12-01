@@ -2,10 +2,10 @@
   <li class="cart__item product">
     <div class="product__pic">
       <img :src="item.img" width="120" height="120"
-           :alt="item.product.title">
+           :alt="item.title">
     </div>
     <h3 class="product__title">
-      {{ item.product.title }}
+      {{ item.title }}
     </h3>
     <span class="product__code">
                 Артикул: {{ item.productId }}
@@ -83,31 +83,5 @@ export default {
       itemTotalPrice,
     };
   },
-  // filters: { numberFormat },
-  //
-  // methods: {
-  //   incrementProduct() {
-  //     this.amount += 1;
-  //   },
-  //
-  //   decrementProduct() {
-  //     this.amount -= 1;
-  //   },
-  //   ...mapActions(['removeProduct', 'updateProductToCart']),
-  // },
-  // computed: {
-  //   amount: {
-  //     get() {
-  //       return this.item.amount;
-  //     },
-  //     set(value) {
-  //       if (value > 0) {
-  //         this.updateProductToCart({ productId: this.item.productId, amount: value });
-  //       } else {
-  //         this.removeProduct(this.item.productId);
-  //       }
-  //     },
-  //   },
-  // },
 };
 </script>

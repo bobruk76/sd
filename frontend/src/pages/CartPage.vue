@@ -18,7 +18,7 @@
         Корзина
       </h1>
       <span class="content__info">
-        Количество товаров:{{ totalAmounts }}
+        Количество товаров:
       </span>
     </div>
 
@@ -26,7 +26,7 @@
       <form class="cart__form form" action="#" method="POST">
         <div class="cart__field">
           <ul class="cart__list">
-            <CartItem v-for="item in products" :key="item.productId" :item="item"></CartItem>
+            <cart-item v-for="item in products" :key="item.productId" :item="item"></cart-item>
           </ul>
         </div>
 
@@ -73,24 +73,5 @@ export default {
       formatTotalSum,
     };
   },
-  // filters: {
-  //   numberFormat,
-  // },
-
-  // computed: {
-  //   ...mapGetters({
-  //     products: 'cartDetailsProducts',
-  //     totalAmounts: 'cartTotalAmounts',
-  //     totalSum: 'cartTotalSum',
-  //   }),
-  // },
-  //
-  // methods: {
-  //   ...mapActions(['loadBaskets']),
-  // },
-  //
-  // created() {
-  //   this.loadBaskets();
-  // },
 };
 </script>
