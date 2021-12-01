@@ -11,7 +11,6 @@ export default function () {
   const $route = useRoute();
   const productData = ref(null);
   const category = ref(null);
-
   const fetchProduct = () => {
     $store.commit('preloaderChangeStatus', true);
     axios.get(`${API_BASE_URL}/products/${$route.params.id}`)

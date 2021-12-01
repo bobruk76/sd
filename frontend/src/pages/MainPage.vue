@@ -65,11 +65,11 @@ export default {
     });
     onMounted(getProducts);
     watch([
-      page, filterCategoryId, filterPriceFrom, filterPriceTo,
+      page, filterCategoryId, filterPriceFrom, filterPriceTo, filterProductProps,
     ], (newValue, oldValue) => {
       console.log(oldValue, newValue);
       getProducts();
-    });
+    }, { deep: true });
 
     return {
       page,

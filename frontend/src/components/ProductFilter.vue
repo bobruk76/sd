@@ -62,7 +62,7 @@
 <script>
 import axios from 'axios';
 import {
-  onMounted, ref, watch,
+  onMounted, ref, toRaw, watch,
 } from 'vue';
 import { API_BASE_URL } from '@/config';
 
@@ -81,7 +81,7 @@ export default {
       $emit('update:priceFrom', currentPriceFrom.value);
       $emit('update:priceTo', currentPriceTo.value);
       $emit('update:categoryId', currentCategoryId.value);
-      $emit('update:productProps', formFields.value);
+      $emit('update:productProps', toRaw(formFields.value));
     };
     const onReset = () => {
       currentPriceFrom.value = 0;

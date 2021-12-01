@@ -34,7 +34,7 @@
       <div class="item__info">
         <span class="item__code">Артикул: {{ product.id }}</span>
         <h2 class="item__title">
-          {{ product.title }}
+          {{ currentOffer.title }}
         </h2>
         <div class="item__form">
           <form class="form" action="#" method="POST">
@@ -51,7 +51,9 @@
                     <input class="colors__radio sr-only"
                            type="radio"
                            name="color-item"
-                           :value="item.color.title"
+                           :value="item.color.id"
+                           v-model="currentColorId"
+                           checked="{{ item.color.id==currentColorId }}"
                     >
                     <span class="colors__value"
                           :style="'background-color: ' + item.color.code + ';'">
@@ -63,7 +65,22 @@
             </fieldset>
 
             <fieldset class="form__block">
+              <legend class="form__legend">{{ product.mainProp.title }}</legend>
 
+              <ul class="sizes sizes--primery">
+                <label class="sizes__item" v-for="item in product.offers" :key="item.id">
+                  <label class="sizes__label">
+                    <input class="sizes__radio sr-only"
+                           type="radio" name="sizes-item"
+                           :value="item.id"
+                           v-model="productOfferId"
+                    >
+                    <span class="sizes__value">
+                      {{ item.propValues[0].value }}
+                    </span>
+                  </label>
+                </label>
+              </ul>
             </fieldset>
 
             <div class="item__row">
@@ -130,10 +147,10 @@
             Все характеристики
           </a>
 
-          <h3>Что это?</h3>
-
-          <h3>Дизайн</h3>
-
+          <div v-for="item in product.specifications" :key="item.id">
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.value }}</p>
+          </div>
         </div>
       </div>
     </section>
@@ -141,17 +158,26 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import useProduct from '@/hooks/useProduct.vue';
 
 export default {
   setup() {
-    const productAdded = ref(false);
     const $store = useStore();
+    const productAdded = ref(false);
     const productAmount = ref(1);
-    const { product, category, fetchProduct } = useProduct();
+    const currentColorId = ref(null);
 
+    const {
+      product, category, fetchProduct,
+    } = useProduct();
+
+    const productOfferId = ref(null);
+    const currentOffer = computed(() => {
+      const { offers } = product.value;
+      return offers.find((item) => item.id === productOfferId.value) || {};
+    });
     const doIncrementProduct = () => {
       productAmount.value += 1;
     };
@@ -174,13 +200,20 @@ export default {
           });
       }
     };
-    fetchProduct();
+    onMounted(() => {
+      fetchProduct();
+      currentColorId.value = product.value.colors[0].id;
+      productOfferId.value = product.value.offers[0].id;
+    });
 
     return {
       productAdded,
       product,
       productAmount,
       category,
+      productOfferId,
+      currentColorId,
+      currentOffer,
       doIncrementProduct,
       doDecrementProduct,
       doAddToCart,
