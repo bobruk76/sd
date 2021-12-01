@@ -7,9 +7,18 @@
     <h3 class="product__title">
       {{ item.title }}
     </h3>
-    <span class="product__code">
-                Артикул: {{ item.productId }}
-              </span>
+    <p class="product__info">
+      {{ item.productOffer.product.mainProp.title }}:
+      <span>{{ item.productOffer.propValues[0].value }}</span>
+    </p>
+    <p class="product__info product__info--color">
+      Цвет:
+      <span>
+        <i style="{{ 'background-color: '+item.color.color.title }}"></i>
+        {{ item.color.color.code }}
+      </span>
+    </p>
+    <span class="product__code">Артикул: {{ item.productId }}</span>
 
     <div class="product__counter form__counter">
       <button type="button" aria-label="Убрать один товар"
