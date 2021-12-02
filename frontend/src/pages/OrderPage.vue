@@ -143,13 +143,11 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
-// import axios from 'axios';
 import InputFormField from '@/components/InputFormField.vue';
 import TextareaFormField from '@/components/TextareaFormField.vue';
 import CartBlock from '@/components/CartBlock.vue';
-// import { API_BASE_URL } from '@/config';
 
 export default {
   components: { InputFormField, TextareaFormField, CartBlock },
@@ -165,7 +163,9 @@ export default {
     const doLoadBasket = () => {
       $store.dispatch('loadBaskets');
     };
-    doLoadBasket();
+    onMounted(() => {
+      doLoadBasket();
+    });
     return {
       formFields,
       formErrors,
@@ -176,61 +176,5 @@ export default {
       sendOrder,
     };
   },
-  // data() {
-  //   return {
-  //     formFields: {},
-  //     formErrors: {},
-  //     errorMessage: null,
-  //   };
-  // },
-  // methods: {
-  //   ...mapActions(['loadBaskets']),
-  //   ...mapActions({
-  //     vSendOrder: 'sendOrder',
-  //   }),
-  //   ...mapMutations(['preloaderChangeStatus', 'updateOrderInfo', 'updateOrderId']),
-  //
-  //   sendOrder() {
-  //     this.preloaderChangeStatus(true);
-  //     return new Promise(((resolve) => setTimeout(resolve, 0)))
-  //       .then(() => (
-  //         axios.post(`${API_BASE_URL}/orders`, {
-  //           ...this.formFields,
-  //         }, {
-  //           params: {
-  //             userAccessKey: this.getUserKey,
-  //           },
-  //         }).then(
-  //           (response) => {
-  //             this.updateOrderInfo(response.data);
-  //             this.updateOrderId(response.data.id);
-  //             this.preloaderChangeStatus(false);
-  //             // this.$router.push({ name: 'orderInfo', params: { id: response.data.id } });
-  //           },
-  //         ).catch(
-  //           (error) => {
-  //             this.formErrors = error.response.data.error.request || {};
-  //             this.errorMessage = error.response.data.error.message || '';
-  //           },
-  //         ).then(
-  //           () => {
-  //             this.preloaderChangeStatus(false);
-  //           },
-  //         )));
-  //   },
-  //
-  // },
-  //
-  // computed: {
-  //   ...mapGetters(['getUserKey']),
-  //   ...mapGetters({
-  //     products: 'cartDetailsProducts',
-  //     totalAmounts: 'cartTotalAmounts',
-  //     totalSum: 'cartTotalSum',
-  //   }),
-  // },
-  // created() {
-  //   this.loadBaskets();
-  // },
 };
 </script>

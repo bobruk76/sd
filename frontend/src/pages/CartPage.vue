@@ -18,7 +18,7 @@
         Корзина
       </h1>
       <span class="content__info">
-        Количество товаров:
+        Количество товаров:{{ totalAmounts }}
       </span>
     </div>
 
@@ -59,18 +59,20 @@ export default {
   components: { CartItem },
 
   setup() {
-    const store = useStore();
-    const products = computed(() => store.getters.cartDetailsProducts);
-    const totalSum = computed(() => store.getters.cartTotalSum);
+    const $store = useStore();
+    const products = computed(() => $store.getters.cartDetailsProducts);
+    const totalSum = computed(() => $store.getters.cartTotalSum);
     const formatTotalSum = computed(() => numberFormat(totalSum.value));
+    const totalAmounts = computed(() => $store.getters.cartTotalAmounts);
 
     const doLoadBasket = () => {
-      store.dispatch('loadBaskets');
+      $store.dispatch('loadBaskets');
     };
     doLoadBasket();
     return {
       products,
       formatTotalSum,
+      totalAmounts,
     };
   },
 };
