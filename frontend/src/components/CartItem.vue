@@ -19,7 +19,7 @@
       </span>
     </p>
 
-    <span class="product__code">Артикул: {{ item.productId }}</span>
+    <span class="product__code">Артикул: {{ item.id }}</span>
 
     <div class="product__counter form__counter">
       <button type="button" aria-label="Убрать один товар"
@@ -56,7 +56,9 @@
 </template>
 
 <script>
-import { computed, ref, watch } from 'vue';
+import {
+  computed, onMounted, ref, watch,
+} from 'vue';
 import { useStore } from 'vuex';
 import numberFormat from '@/helpers/numberFormat';
 
@@ -65,7 +67,8 @@ export default {
 
   setup(props) {
     const store = useStore();
-    const amount = ref(props.item.amount);
+    const amount = ref(null);
+    const basketItemId = ref(null);
     const doIncrementProduct = () => {
       amount.value += 1;
     };
@@ -73,7 +76,7 @@ export default {
       amount.value -= 1;
     };
     const doRemoveProduct = () => {
-      store.dispatch('removeProduct', props.item.productId);
+      store.dispatch('removeProduct', basketItemId.value);
     };
     const itemTotalPrice = computed(() => numberFormat(props.item.totalPrice));
 
@@ -83,6 +86,10 @@ export default {
       } else {
         store.dispatch('removeProduct', props.item.productId);
       }
+    });
+    onMounted(() => {
+      basketItemId.value = props.item.id;
+      amount.value = props.item.amount;
     });
 
     return {

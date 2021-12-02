@@ -4,6 +4,7 @@ import { API_BASE_URL } from '@/config';
 
 export default createStore({
   state: {
+    cartId: null,
     cartProducts: null,
     userKey: null,
     preloader: false,
@@ -14,6 +15,10 @@ export default createStore({
   mutations: {
     preloaderChangeStatus(state, status) {
       state.preloader = status;
+    },
+
+    updateCartId(state, cartId) {
+      state.cartId = cartId;
     },
 
     updateCartProducts(state, cartProducts) {
@@ -99,10 +104,12 @@ export default createStore({
       })
         .then(
           (response) => {
+            const responseData = response.data;
             if (!context.state.userKey) {
-              context.commit('updateUserKey', response.data.user.accessKey);
+              context.commit('updateUserKey', responseData.user.accessKey);
             }
-            context.commit('updateCartProducts', response.data.items);
+            context.commit('updateCartId', responseData.id);
+            context.commit('updateCartProducts', responseData.items);
           },
         )
         .catch((error) => {
@@ -142,13 +149,13 @@ export default createStore({
         ));
     },
 
-    removeProduct(context, productId) {
+    removeProduct(context, basketItemId) {
       return axios.delete(`${API_BASE_URL}/baskets/products`, {
         params: {
           userAccessKey: context.state.userKey,
         },
         data: {
-          productId,
+          basketItemId,
         },
       })
         .then(
@@ -193,7 +200,8 @@ export default createStore({
           },
         )
         .catch(
-          () => {
+          (error) => {
+            console.log(error);
           },
         )
         .then(
