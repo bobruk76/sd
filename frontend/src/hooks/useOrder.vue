@@ -1,10 +1,16 @@
 <script>
 import axios from 'axios';
 import { ref } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import numberFormat from '@/helpers/numberFormat';
 import { API_BASE_URL } from '@/config';
 
 export default function () {
+  const $router = useRouter();
+  const $store = useStore();
+  const formFields = ref({});
+  const formErrors = ref({});
   const deliveries = ref([]);
   const payments = ref([]);
   const deliveryTypeId = ref(null);
@@ -36,13 +42,41 @@ export default function () {
         console.log(error);
       });
   };
+  const sendOrder = () => {
+    $store.commit('preloaderChangeStatus', true);
+    axios.post(`${API_BASE_URL}/orders`, {
+      ...formFields.value,
+      paymentTypeId: paymentTypeId.value,
+      deliveryTypeId: deliveryTypeId.value,
+    }, {
+      params: {
+        deliveryTypeId: deliveryTypeId.value,
+      },
+    })
+      .then((response) => {
+        // this.updateOrderInfo(response.data);
+        // this.updateOrderId(response.data.id);
+        $store.commit('updateOrderInfo', response.data);
+        $store.commit('updateOrderId', response.data.id);
+        $router.push({ name: 'orderInfo', params: { id: response.data.id } });
+      })
+      .catch((response) => {
+        console.log(response);
+      })
+      .then(() => {
+        $store.commit('preloaderChangeStatus', false);
+      });
+  };
   return {
+    formFields,
+    formErrors,
     deliveries,
     deliveryTypeId,
     payments,
     paymentTypeId,
     fetchDeliveries,
     fetchPayments,
+    sendOrder,
   };
 }
 </script>

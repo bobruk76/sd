@@ -150,22 +150,21 @@ export default {
   components: { InputFormField, TextareaFormField, CartBlock },
   setup() {
     const $store = useStore();
-    const formFields = ref({});
-    const formErrors = ref({});
     const errorMessage = ref(null);
     const products = computed(() => $store.getters.cartDetailsProducts || []);
     const totalAmounts = computed(() => $store.getters.cartTotalAmounts || 0);
     const totalSum = computed(() => $store.getters.cartTotalSum || 0);
     const {
+      formFields,
+      formErrors,
       deliveries,
       deliveryTypeId,
       payments,
       paymentTypeId,
       fetchDeliveries,
       fetchPayments,
+      sendOrder,
     } = useOrder();
-
-    const sendOrder = () => {};
     const doLoadBasket = () => {
       $store.dispatch('loadBaskets');
     };
