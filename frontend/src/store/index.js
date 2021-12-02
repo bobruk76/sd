@@ -50,10 +50,10 @@ export default createStore({
     },
 
     changeAmountProduct(state, {
-      productId,
+      basketItemId,
       amount,
     }) {
-      const Item = state.cartProducts.find((item) => item.productId === productId);
+      const Item = state.cartProducts.find((item) => item.id === basketItemId);
       if (Item) {
         Item.amount = +amount;
         Item.totalPrice = Item.amount * Item.price;
@@ -166,11 +166,11 @@ export default createStore({
     },
 
     updateProductToCart(context, {
-      productId,
+      basketItemId,
       amount,
     }) {
       return axios.put(`${API_BASE_URL}/baskets/products`, {
-        productId,
+        basketItemId,
         quantity: amount,
       }, {
         params: {
@@ -180,7 +180,7 @@ export default createStore({
         .then(
           () => {
             context.commit('changeAmountProduct', {
-              productId,
+              basketItemId,
               amount,
             });
           },

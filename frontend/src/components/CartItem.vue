@@ -82,9 +82,9 @@ export default {
 
     watch(amount, () => {
       if (amount.value > 0) {
-        store.dispatch('updateProductToCart', { productId: props.item.productId, amount: amount.value });
+        store.dispatch('updateProductToCart', { basketItemId: basketItemId.value, amount: amount.value });
       } else {
-        store.dispatch('removeProduct', props.item.productId);
+        doRemoveProduct();
       }
     });
     onMounted(() => {
