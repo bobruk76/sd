@@ -88,8 +88,8 @@
                          type="radio"
                          name="delivery"
                          :value="delivery.id"
-                         v-model="deliveryId"
-                         checked=""
+                         v-model="deliveryTypeId"
+                         :checked="delivery.id === deliveryTypeId"
                   >
                   <span class="options__value">
                     {{ delivery.title }} <b>{{ delivery.cutePrice }}</b>
@@ -100,19 +100,17 @@
 
             <h3 class="cart__title">Оплата</h3>
             <ul class="cart__options options">
-              <li class="options__item">
+              <li class="options__item" v-for="payment in payments" :key="payment.id">
                 <label class="options__label">
-                  <input class="options__radio sr-only" type="radio" name="pay" value="card">
+                  <input class="options__radio sr-only"
+                         type="radio"
+                         name="pay"
+                         :value="payment.id"
+                         v-model="paymentTypeId"
+                         :checked="payment.id===paymentTypeId"
+                  >
                   <span class="options__value">
-                    Картой при получении
-                  </span>
-                </label>
-              </li>
-              <li class="options__item">
-                <label class="options__label">
-                  <input class="options__radio sr-only" type="radio" name="pay" value="cash">
-                  <span class="options__value">
-                    Наличными при получении
+                    {{ payment.title }}
                   </span>
                 </label>
               </li>
@@ -139,14 +137,14 @@
 </template>
 
 <script>
-import { computed, onMounted, ref } from 'vue';
+import {
+  computed, onMounted, ref, watch,
+} from 'vue';
 import { useStore } from 'vuex';
-import axios from 'axios';
 import InputFormField from '@/components/InputFormField.vue';
 import TextareaFormField from '@/components/TextareaFormField.vue';
 import CartBlock from '@/components/CartBlock.vue';
-import { API_BASE_URL } from '@/config';
-import numberFormat from '../helpers/numberFormat';
+import useOrder from '@/hooks/useOrder.vue';
 
 export default {
   components: { InputFormField, TextareaFormField, CartBlock },
@@ -158,31 +156,25 @@ export default {
     const products = computed(() => $store.getters.cartDetailsProducts || []);
     const totalAmounts = computed(() => $store.getters.cartTotalAmounts || 0);
     const totalSum = computed(() => $store.getters.cartTotalSum || 0);
-    const deliveries = ref([]);
-    const deliveryId = ref(null);
+    const {
+      deliveries,
+      deliveryTypeId,
+      payments,
+      paymentTypeId,
+      fetchDeliveries,
+      fetchPayments,
+    } = useOrder();
 
     const sendOrder = () => {};
     const doLoadBasket = () => {
       $store.dispatch('loadBaskets');
     };
-    const fetchDeliveries = () => {
-      axios.get(`${API_BASE_URL}/deliveries`)
-        .then((response) => {
-          deliveries.value = response.data.map((item) => ({
-            ...item,
-            cutePrice: item.price > 0 ? numberFormat(item.price) : 'бесплатно',
-          }));
-          deliveryId.value = deliveries.value[0].id;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-
     onMounted(() => {
-      fetchDeliveries();
       doLoadBasket();
+      fetchDeliveries();
+      fetchPayments();
     });
+    watch(deliveryTypeId, fetchPayments);
     return {
       formFields,
       formErrors,
@@ -191,7 +183,9 @@ export default {
       errorMessage,
       products,
       deliveries,
-      deliveryId,
+      payments,
+      paymentTypeId,
+      deliveryTypeId,
       sendOrder,
     };
   },
