@@ -11,6 +11,7 @@ export default function () {
   const $store = useStore();
   const formFields = ref({});
   const formErrors = ref({});
+  const errorMessage = ref(null);
   const deliveries = ref([]);
   const payments = ref([]);
   const deliveryTypeId = ref(null);
@@ -60,8 +61,9 @@ export default function () {
         $store.commit('updateOrderId', response.data.id);
         $router.push({ name: 'orderInfo', params: { id: response.data.id } });
       })
-      .catch((response) => {
-        console.log(response);
+      .catch((error) => {
+        formErrors.value = error.response.data.error.request || {};
+        errorMessage.value = error.response.data.error.message || '';
       })
       .then(() => {
         $store.commit('preloaderChangeStatus', false);
@@ -70,6 +72,7 @@ export default function () {
   return {
     formFields,
     formErrors,
+    errorMessage,
     deliveries,
     deliveryTypeId,
     payments,

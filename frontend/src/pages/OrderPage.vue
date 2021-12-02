@@ -138,7 +138,7 @@
 
 <script>
 import {
-  computed, onMounted, ref, watch,
+  computed, onMounted, watch,
 } from 'vue';
 import { useStore } from 'vuex';
 import InputFormField from '@/components/InputFormField.vue';
@@ -150,13 +150,13 @@ export default {
   components: { InputFormField, TextareaFormField, CartBlock },
   setup() {
     const $store = useStore();
-    const errorMessage = ref(null);
     const products = computed(() => $store.getters.cartDetailsProducts || []);
     const totalAmounts = computed(() => $store.getters.cartTotalAmounts || 0);
     const totalSum = computed(() => $store.getters.cartTotalSum || 0);
     const {
       formFields,
       formErrors,
+      errorMessage,
       deliveries,
       deliveryTypeId,
       payments,
