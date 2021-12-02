@@ -102,17 +102,13 @@ export default {
   },
 };
 </script>
-<style scoped>
-.product {
+<style scoped lang="stylus">
+.product
   grid-template-rows: repeat(4, min-content);
-}
-.product__info {
+.product__info
     grid-row: 1/4;
-}
-.product__info--color {
+.product__info--color
     grid-row: 2/4;
-}
-.product__code {
+.product__code
   grid-row: 4/4;
-}
 </style>

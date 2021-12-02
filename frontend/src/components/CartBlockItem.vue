@@ -1,8 +1,8 @@
 <template>
   <li class="cart__order">
-    <h3>{{ item.product.title }}</h3>
+    <h3>{{ item.title }}</h3>
     <b>{{ item.quantity }} x {{ itemPrice }} ₽</b>
-    <span>Артикул: {{ item.product.id }}</span>
+    <span>Артикул: {{ item.id }}</span>
   </li>
 </template>
 

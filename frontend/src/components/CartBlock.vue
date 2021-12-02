@@ -22,7 +22,7 @@ export default {
   components: { CartBlockItem },
   props: ['products', 'totalSum', 'totalAmounts'],
   setup(props) {
-    const totalSumFormat = computed(() => numberFormat(props.totalSum));
+    const totalSumFormat = computed(() => numberFormat(props.totalSum) || '');
     return {
       totalSumFormat,
     };

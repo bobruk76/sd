@@ -82,21 +82,17 @@
           <div class="cart__options">
             <h3 class="cart__title">Доставка</h3>
             <ul class="cart__options options">
-              <li class="options__item">
+              <li class="options__item" v-for="delivery in deliveries" :key="delivery.id">
                 <label class="options__label">
                   <input class="options__radio sr-only"
-                         type="radio" name="delivery" value="0" checked="">
+                         type="radio"
+                         name="delivery"
+                         :value="delivery.id"
+                         v-model="deliveryId"
+                         checked=""
+                  >
                   <span class="options__value">
-                    Самовывоз <b>бесплатно</b>
-                  </span>
-                </label>
-              </li>
-              <li class="options__item">
-                <label class="options__label">
-                  <input class="options__radio sr-only"
-                         type="radio" name="delivery" value="500">
-                  <span class="options__value">
-                    Курьером <b>500 ₽</b>
+                    {{ delivery.title }} <b>{{ delivery.cutePrice }}</b>
                   </span>
                 </label>
               </li>
@@ -145,9 +141,12 @@
 <script>
 import { computed, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
+import axios from 'axios';
 import InputFormField from '@/components/InputFormField.vue';
 import TextareaFormField from '@/components/TextareaFormField.vue';
 import CartBlock from '@/components/CartBlock.vue';
+import { API_BASE_URL } from '@/config';
+import numberFormat from '../helpers/numberFormat';
 
 export default {
   components: { InputFormField, TextareaFormField, CartBlock },
@@ -156,14 +155,32 @@ export default {
     const formFields = ref({});
     const formErrors = ref({});
     const errorMessage = ref(null);
-    const products = computed(() => $store.getters.cartDetailsProducts);
-    const totalAmounts = computed(() => $store.getters.cartTotalAmounts);
-    const totalSum = computed(() => $store.getters.cartTotalSum);
+    const products = computed(() => $store.getters.cartDetailsProducts || []);
+    const totalAmounts = computed(() => $store.getters.cartTotalAmounts || 0);
+    const totalSum = computed(() => $store.getters.cartTotalSum || 0);
+    const deliveries = ref([]);
+    const deliveryId = ref(null);
+
     const sendOrder = () => {};
     const doLoadBasket = () => {
       $store.dispatch('loadBaskets');
     };
+    const fetchDeliveries = () => {
+      axios.get(`${API_BASE_URL}/deliveries`)
+        .then((response) => {
+          deliveries.value = response.data.map((item) => ({
+            ...item,
+            cutePrice: item.price > 0 ? numberFormat(item.price) : 'бесплатно',
+          }));
+          deliveryId.value = deliveries.value[0].id;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
     onMounted(() => {
+      fetchDeliveries();
       doLoadBasket();
     });
     return {
@@ -173,6 +190,8 @@ export default {
       totalSum,
       errorMessage,
       products,
+      deliveries,
+      deliveryId,
       sendOrder,
     };
   },
