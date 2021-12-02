@@ -8,16 +8,17 @@
       {{ item.title }}
     </h3>
     <p class="product__info">
-      {{ item.productOffer.product.mainProp.title }}:
-      <span>{{ item.productOffer.propValues[0].value }}</span>
+      {{ item.productOffer.product.mainProp.title }}: <span>{{ item.productOffer.propValues[0].value }}</span>
     </p>
+
     <p class="product__info product__info--color">
       Цвет:
       <span>
-        <i style="{{ 'background-color: '+item.color.color.title }}"></i>
-        {{ item.color.color.code }}
+        <i :style="'background-color: ' + item.color.color.code"></i>
+        {{ item.color.color.title }}
       </span>
     </p>
+
     <span class="product__code">Артикул: {{ item.productId }}</span>
 
     <div class="product__counter form__counter">
@@ -94,3 +95,17 @@ export default {
   },
 };
 </script>
+<style scoped>
+.product {
+  grid-template-rows: repeat(4, min-content);
+}
+.product__info {
+    grid-row: 1/4;
+}
+.product__info--color {
+    grid-row: 2/4;
+}
+.product__code {
+  grid-row: 4/4;
+}
+</style>
