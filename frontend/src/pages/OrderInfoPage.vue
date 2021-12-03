@@ -79,6 +79,7 @@
         <cart-block :products="basketItems"
                     :total-sum="totalSum"
                     :total-amounts="totalQuantity"
+                    :cute-delivery-type="cuteDeliveryType"
         >
           <p></p>
         </cart-block>
@@ -107,6 +108,7 @@ export default {
       basketItems,
       totalQuantity,
       totalSum,
+      cuteDeliveryType,
     } = useOrderInfo();
     return {
       orders,
@@ -114,33 +116,8 @@ export default {
       basketItems,
       totalQuantity,
       totalSum,
+      cuteDeliveryType,
     };
   },
-
-  // computed: {
-  //   ...mapGetters({
-  //     orders: 'getAllOrders',
-  //     orderInfo: 'getOrderInfo',
-  //   }),
-  //
-  //   totalAmounts() {
-  //     return this.orderInfo ? this.orderInfo.basket.items.reduce((count, item) => count
-  //       + item.quantity, 0) : 0;
-  //   },
-  // },
-  //
-  // methods: {
-  //   ...mapActions(['loadOrder']),
-  // },
-  //
-  // watch: {
-  //   '$route.params.id': {
-  //     handler() {
-  //       this.loadOrder(this.$route.params.id);
-  //     },
-  //     immediate: true,
-  //   },
-  // },
-
 };
 </script>

@@ -13,6 +13,7 @@ export default function () {
   const basketItems = ref([]);
   const totalQuantity = ref(null);
   const totalSum = ref(null);
+  const cuteDeliveryType = ref(null);
   const orders = computed(() => (('orders' in localStorage) ? localStorage.getItem('orders')
     .split(',') : $store.state.orderId) || []);
 
@@ -24,13 +25,15 @@ export default function () {
       },
     })
       .then((response) => {
-        basketItems.value = response.data.basket.items.map((item) => ({
+        const responseData = response.data;
+        basketItems.value = responseData.basket.items.map((item) => ({
           ...item,
           title: item.productOffer.title,
         }));
         totalQuantity.value = basketItems.value.reduce((count, item) => count + item.quantity, 0);
-        orderInfo.value = response.data;
-        totalSum.value = response.data.totalPrice;
+        orderInfo.value = responseData;
+        totalSum.value = responseData.totalPrice;
+        cuteDeliveryType.value = `${responseData.deliveryType.title}: <b>${responseData.deliveryType.price}₽`;
       })
       .catch((error) => {
         console.log(error);
@@ -49,6 +52,7 @@ export default function () {
     basketItems,
     totalQuantity,
     totalSum,
+    cuteDeliveryType,
   };
 }
 </script>
