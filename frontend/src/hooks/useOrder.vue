@@ -51,7 +51,7 @@ export default function () {
       deliveryTypeId: deliveryTypeId.value,
     }, {
       params: {
-        deliveryTypeId: deliveryTypeId.value,
+        userAccessKey: $store.state.userKey,
       },
     })
       .then((response) => {
