@@ -165,11 +165,11 @@ export default {
       fetchPayments,
       sendOrder,
     } = useOrder();
-    const doLoadBasket = () => {
+    const fetchBasket = () => {
       $store.dispatch('loadBaskets');
     };
     onMounted(() => {
-      doLoadBasket();
+      fetchBasket();
       fetchDeliveries();
       fetchPayments();
     });
