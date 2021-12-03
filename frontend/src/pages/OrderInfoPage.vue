@@ -20,7 +20,7 @@
       </ul>
 
       <h1 class="content__title">
-        Заказ оформлен <span>№ 23621</span>
+        Заказ оформлен <span>№ {{ orderInfo.id }}</span>
       </h1>
     </div>
 
@@ -70,15 +70,15 @@
                 Способ оплаты
               </span>
               <span class="dictionary__value">
-                картой при получении
+                {{ orderInfo.paymentType }}
               </span>
             </li>
           </ul>
         </div>
 
-        <cart-block :products="orderInfo.basket.items"
-                   :total-sum="orderInfo.totalPrice"
-                   :total-amounts="totalAmounts"
+        <cart-block :products="basketItems"
+                    :total-sum="totalSum"
+                    :total-amounts="totalQuantity"
         >
           <p></p>
         </cart-block>
@@ -95,37 +95,52 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
 import CartBlock from '@/components/CartBlock.vue';
+import useOrderInfo from '@/hooks/useOrderInfo.vue';
 
 export default {
-  name: 'OrderInfoPage',
   components: { CartBlock },
-
-  computed: {
-    ...mapGetters({
-      orders: 'getAllOrders',
-      orderInfo: 'getOrderInfo',
-    }),
-
-    totalAmounts() {
-      return this.orderInfo ? this.orderInfo.basket.items.reduce((count, item) => count
-        + item.quantity, 0) : 0;
-    },
+  setup() {
+    const {
+      orders,
+      orderInfo,
+      basketItems,
+      totalQuantity,
+      totalSum,
+    } = useOrderInfo();
+    return {
+      orders,
+      orderInfo,
+      basketItems,
+      totalQuantity,
+      totalSum,
+    };
   },
 
-  methods: {
-    ...mapActions(['loadOrder']),
-  },
-
-  watch: {
-    '$route.params.id': {
-      handler() {
-        this.loadOrder(this.$route.params.id);
-      },
-      immediate: true,
-    },
-  },
+  // computed: {
+  //   ...mapGetters({
+  //     orders: 'getAllOrders',
+  //     orderInfo: 'getOrderInfo',
+  //   }),
+  //
+  //   totalAmounts() {
+  //     return this.orderInfo ? this.orderInfo.basket.items.reduce((count, item) => count
+  //       + item.quantity, 0) : 0;
+  //   },
+  // },
+  //
+  // methods: {
+  //   ...mapActions(['loadOrder']),
+  // },
+  //
+  // watch: {
+  //   '$route.params.id': {
+  //     handler() {
+  //       this.loadOrder(this.$route.params.id);
+  //     },
+  //     immediate: true,
+  //   },
+  // },
 
 };
 </script>

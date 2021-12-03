@@ -45,10 +45,6 @@ export default createStore({
       localStorage.setItem('orders', orders);
     },
 
-    updateOrderInfo(state, orderInfo) {
-      state.orderInfo = orderInfo;
-    },
-
     changeAmountProduct(state, {
       basketItemId,
       amount,
@@ -59,7 +55,6 @@ export default createStore({
         Item.totalPrice = Item.amount * Item.price;
       }
     },
-
   },
 
   actions: {
@@ -158,30 +153,6 @@ export default createStore({
         );
     },
 
-    loadOrder(context, orderId) {
-      context.commit('preloaderChangeStatus', true);
-      return axios.get(`${API_BASE_URL}/orders/${orderId}`, {
-        params: {
-          userAccessKey: context.state.userKey,
-        },
-      })
-        .then(
-          (response) => {
-            context.commit('updateOrderInfo', response.data);
-          },
-        )
-        .catch(
-          (error) => {
-            console.log(error);
-          },
-        )
-        .then(
-          () => {
-            context.commit('preloaderChangeStatus', false);
-          },
-        );
-    },
-
   },
 
   getters: {
@@ -206,15 +177,6 @@ export default createStore({
       return state.cartProducts ? state.cartProducts.reduce(
         (sum, item) => sum + item.totalPrice, 0,
       ) : 0;
-    },
-
-    getOrderInfo(state) {
-      return state.orderInfo ? state.orderInfo : {};
-    },
-
-    getAllOrders(state) {
-      return ('orders' in localStorage) ? localStorage.getItem('orders')
-        .split(',') : state.orderId;
     },
 
   },
