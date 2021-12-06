@@ -65,12 +65,7 @@ export default {
       filterCategoryId.value = ('categoryId' in $route.params) ? $route.params.categoryId : 0;
       getProducts();
     });
-    watch([
-      // page, filterCategoryId, filterPriceFrom, filterPriceTo, filterProductProps,
-      page,
-    ], () => {
-      getProducts();
-    });
+    watch(page, getProducts);
 
     return {
       page,

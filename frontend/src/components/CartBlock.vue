@@ -6,8 +6,9 @@
     </ul>
 
     <div class="cart__total">
-      <p>{{ cuteDeliveryType }}</p>
       <p>Итого: <b>{{ totalAmounts }}</b> товара на сумму <b>{{ totalSumFormat }} ₽</b></p>
+      <p>{{ cuteDeliveryType }}</p>
+      <p>Итого к оплате: <b>{{ itogoSumFormat }} ₽</b></p>
     </div>
     <slot></slot>
   </div>
@@ -20,11 +21,13 @@ import numberFormat from '@/helpers/numberFormat';
 
 export default {
   components: { CartBlockItem },
-  props: ['products', 'totalSum', 'totalAmounts', 'cuteDeliveryType'],
+  props: ['products', 'totalSum', 'totalAmounts', 'cuteDeliveryType', 'deliveryPrice'],
   setup(props) {
     const totalSumFormat = computed(() => numberFormat(props.totalSum) || '');
+    const itogoSumFormat = computed(() => numberFormat(Number(props.totalSum) + Number(props.deliveryPrice)) || '');
     return {
       totalSumFormat,
+      itogoSumFormat,
     };
   },
 };

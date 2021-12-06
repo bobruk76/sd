@@ -11,9 +11,10 @@ export default function () {
   const $store = useStore();
   const orderInfo = ref({});
   const basketItems = ref([]);
-  const totalQuantity = ref(null);
-  const totalSum = ref(null);
+  const totalQuantity = ref(0);
+  const totalSum = ref(0);
   const cuteDeliveryType = ref(null);
+  const deliveryPrice = ref(0);
   const orders = computed(() => (('orders' in localStorage) ? localStorage.getItem('orders')
     .split(',') : $store.state.orderId) || []);
 
@@ -33,7 +34,8 @@ export default function () {
         totalQuantity.value = basketItems.value.reduce((count, item) => count + item.quantity, 0);
         orderInfo.value = responseData;
         totalSum.value = responseData.totalPrice;
-        cuteDeliveryType.value = `${responseData.deliveryType.title}: <b>${responseData.deliveryType.price}₽`;
+        cuteDeliveryType.value = `${responseData.deliveryType.title}: ${responseData.deliveryType.price}₽`;
+        deliveryPrice.value = responseData.deliveryType.price;
       })
       .catch((error) => {
         console.log(error);
@@ -53,6 +55,7 @@ export default function () {
     totalQuantity,
     totalSum,
     cuteDeliveryType,
+    deliveryPrice,
   };
 }
 </script>

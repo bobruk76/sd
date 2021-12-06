@@ -80,6 +80,7 @@
                     :total-sum="totalSum"
                     :total-amounts="totalQuantity"
                     :cute-delivery-type="cuteDeliveryType"
+                    :deliveryPrice="deliveryPrice"
         >
           <p></p>
         </cart-block>
@@ -109,6 +110,7 @@ export default {
       totalQuantity,
       totalSum,
       cuteDeliveryType,
+      deliveryPrice,
     } = useOrderInfo();
     return {
       orders,
@@ -117,6 +119,7 @@ export default {
       totalQuantity,
       totalSum,
       cuteDeliveryType,
+      deliveryPrice,
     };
   },
 };

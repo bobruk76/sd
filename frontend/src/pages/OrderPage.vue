@@ -118,7 +118,12 @@
           </div>
         </div>
 
-        <cart-block :products="products" :total-sum="totalSum" :total-amounts="totalAmounts">
+        <cart-block :products="products"
+                    :total-sum="totalSum"
+                    :total-amounts="totalAmounts"
+                    :cuteDeliveryType="cuteDeliveryType"
+                    :deliveryPrice="deliveryPrice"
+        >
           <button class="cart__button button button--primery" type="submit">
             Оформить заказ
           </button>
@@ -137,7 +142,7 @@
 </template>
 
 <script>
-import { computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import InputFormField from '@/components/InputFormField.vue';
 import TextareaFormField from '@/components/TextareaFormField.vue';
@@ -151,6 +156,8 @@ export default {
     const products = computed(() => $store.getters.cartDetailsProducts || []);
     const totalAmounts = computed(() => $store.getters.cartTotalAmounts || 0);
     const totalSum = computed(() => $store.getters.cartTotalSum || 0);
+    const deliveryPrice = ref(0);
+    const cuteDeliveryType = ref('');
     const {
       formFields,
       formErrors,
@@ -168,8 +175,13 @@ export default {
     };
     fetchBasket();
     fetchDeliveries();
-    fetchPayments();
-    watch(deliveryTypeId, fetchPayments);
+    watch(deliveryTypeId, () => {
+      fetchPayments();
+      const delivery = deliveries.value.find((item) => item.id === deliveryTypeId.value);
+      deliveryPrice.value = delivery.price;
+      cuteDeliveryType.value = `${delivery.title}: ${delivery.price}₽`;
+    });
+
     return {
       formFields,
       formErrors,
@@ -181,6 +193,8 @@ export default {
       payments,
       paymentTypeId,
       deliveryTypeId,
+      deliveryPrice,
+      cuteDeliveryType,
       sendOrder,
     };
   },
