@@ -9,30 +9,46 @@ import { API_BASE_URL } from '@/config';
 export default function () {
   const $store = useStore();
   const $route = useRoute();
-  const productData = ref(null);
-  const category = ref(null);
+  const productData = ref({});
+  const colors = ref([]);
+  const currentColorId = ref(0);
+  const productOfferId = ref(0);
+  const currentOffer = ref({});
+  const category = ref({});
   const fetchProduct = () => {
     $store.commit('preloaderChangeStatus', true);
     axios.get(`${API_BASE_URL}/products/${$route.params.id}`)
       .then((response) => {
         const product = response.data;
         category.value = product.category;
+        colors.value = product.colors;
+        currentColorId.value = product.colors[0].id;
+        const { offers } = product;
+        productOfferId.value = offers[0].id;
+        const offer = offers[0];
+        currentOffer.value = Object.assign(offer, {
+          productPrice: numberFormat(offer.price),
+        });
+
         productData.value = Object.assign(product, {
           productPrice: numberFormat(product.price),
           img: product.preview.file.url,
+          title: product.mainProp.title,
         });
       })
-      .catch((response) => {
-        console.log(response);
-      })
+      .catch(() => {})
       .then(() => {
         $store.commit('preloaderChangeStatus', false);
       });
   };
-  fetchProduct();
+  // fetchProduct();
   return {
     product: productData,
     category,
+    colors,
+    currentColorId,
+    currentOffer,
+    productOfferId,
     fetchProduct,
   };
 }

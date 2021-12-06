@@ -46,7 +46,7 @@
               <legend class="form__legend">Цвет:</legend>
               <ul class="colors">
 
-                <li class="colors__item" v-for="item in product.colors" :key="item.color.id">
+                <li class="colors__item" v-for="(item, key) in colors" :key="key">
                   <label class="colors__label">
                     <input class="colors__radio sr-only"
                            type="radio"
@@ -65,7 +65,7 @@
             </fieldset>
 
             <fieldset class="form__block">
-              <legend class="form__legend">{{ product.mainProp.title }}</legend>
+              <legend class="form__legend">{{ product.title }}</legend>
 
               <ul class="sizes sizes--primery">
                 <label class="sizes__item" v-for="item in product.offers" :key="item.id">
@@ -158,31 +158,26 @@
 </template>
 
 <script>
-import { computed, onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useStore } from 'vuex';
 import useProduct from '@/hooks/useProduct.vue';
-import numberFormat from '@/helpers/numberFormat';
 
 export default {
   setup() {
     const $store = useStore();
     const productAdded = ref(false);
     const productAmount = ref(1);
-    const currentColorId = ref(null);
 
     const {
-      product, category, fetchProduct,
+      product,
+      category,
+      colors,
+      currentColorId,
+      currentOffer,
+      productOfferId,
+      fetchProduct,
     } = useProduct();
 
-    const productOfferId = ref(null);
-    const currentOffer = computed(() => {
-      const { offers } = product.value;
-      const offer = offers.find((item) => item.id === productOfferId.value) || {};
-
-      return Object.assign(offer, {
-        productPrice: numberFormat(offer.price),
-      });
-    });
     const doIncrementProduct = () => {
       productAmount.value += 1;
     };
@@ -208,17 +203,15 @@ export default {
           });
       }
     };
-    onMounted(() => {
-      fetchProduct();
-      currentColorId.value = product.value.colors[0].id;
-      productOfferId.value = product.value.offers[0].id;
-    });
+
+    fetchProduct();
 
     return {
       productAdded,
       product,
       productAmount,
       category,
+      colors,
       productOfferId,
       currentColorId,
       currentOffer,
