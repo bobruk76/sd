@@ -16,6 +16,7 @@
         v-model:category-id="filterCategoryId"
         v-model:product-props="filterProductProps"
         v-model:page="page"
+        @emGetProducts="getProducts"
       >
       </product-filter>
       <section class="catalog">
@@ -28,7 +29,7 @@
 
 <script>
 import {
-  onBeforeMount, onMounted, ref, watch,
+  onBeforeMount, ref, watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
 import ProductList from '@/components/ProductList.vue';
@@ -62,14 +63,14 @@ export default {
     };
     onBeforeMount(() => {
       filterCategoryId.value = ('categoryId' in $route.params) ? $route.params.categoryId : 0;
-    });
-    onMounted(getProducts);
-    watch([
-      page, filterCategoryId, filterPriceFrom, filterPriceTo, filterProductProps,
-    ], (newValue, oldValue) => {
-      console.log(oldValue, newValue);
       getProducts();
-    }, { deep: true });
+    });
+    watch([
+      // page, filterCategoryId, filterPriceFrom, filterPriceTo, filterProductProps,
+      page,
+    ], () => {
+      getProducts();
+    });
 
     return {
       page,
@@ -82,6 +83,7 @@ export default {
       totalProducts,
       countProductPages,
       fetchProducts,
+      getProducts,
     };
   },
 };

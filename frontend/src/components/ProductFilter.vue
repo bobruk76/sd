@@ -18,7 +18,7 @@
       <fieldset class="form__block">
         <legend class="form__legend">Категория</legend>
         <label class="form__label form__label--select">
-          <select class="form__select" type="text"
+          <select class="form__select"
                   name="category"
                   v-model.number="currentCategoryId">
             <option value="0">Все категории</option>
@@ -62,12 +62,13 @@
 <script>
 import axios from 'axios';
 import {
-  onMounted, ref, toRaw, watch,
+  ref, toRaw, watch,
 } from 'vue';
 import { API_BASE_URL } from '@/config';
 
 export default {
   props: ['priceFrom', 'priceTo', 'categoryId', 'page', 'productProps'],
+  emits: ['emGetProducts'],
   setup(props, { emit: $emit }) {
     const formFields = ref(props.productProps);
     const currentPriceFrom = ref(props.priceFrom);
@@ -82,6 +83,7 @@ export default {
       $emit('update:priceTo', currentPriceTo.value);
       $emit('update:categoryId', currentCategoryId.value);
       $emit('update:productProps', toRaw(formFields.value));
+      $emit('emGetProducts');
     };
     const onReset = () => {
       currentPriceFrom.value = 0;
@@ -109,7 +111,7 @@ export default {
       }
     };
     watch(currentCategoryId, onLoadProductProps);
-    onMounted(onLoadParams);
+    onLoadParams();
     return {
       formFields,
       currentPriceFrom,
