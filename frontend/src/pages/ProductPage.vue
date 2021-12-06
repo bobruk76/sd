@@ -53,7 +53,7 @@
                            name="color-item"
                            :value="item.color.id"
                            v-model="currentColorId"
-                           checked="{{ item.color.id==currentColorId }}"
+                           :checked="item.color.id===currentColorId"
                     >
                     <span class="colors__value"
                           :style="'background-color: ' + item.color.code + ';'">

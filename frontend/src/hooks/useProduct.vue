@@ -22,7 +22,7 @@ export default function () {
         const product = response.data;
         category.value = product.category;
         colors.value = product.colors;
-        currentColorId.value = product.colors[0].id;
+        currentColorId.value = product.colors[0].color.id;
         const { offers } = product;
         productOfferId.value = offers[0].id;
         const offer = offers[0];
@@ -41,7 +41,6 @@ export default function () {
         $store.commit('preloaderChangeStatus', false);
       });
   };
-  // fetchProduct();
   return {
     product: productData,
     category,

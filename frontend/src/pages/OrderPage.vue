@@ -137,9 +137,7 @@
 </template>
 
 <script>
-import {
-  computed, onMounted, watch,
-} from 'vue';
+import { computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import InputFormField from '@/components/InputFormField.vue';
 import TextareaFormField from '@/components/TextareaFormField.vue';
@@ -168,11 +166,9 @@ export default {
     const fetchBasket = () => {
       $store.dispatch('loadBaskets');
     };
-    onMounted(() => {
-      fetchBasket();
-      fetchDeliveries();
-      fetchPayments();
-    });
+    fetchBasket();
+    fetchDeliveries();
+    fetchPayments();
     watch(deliveryTypeId, fetchPayments);
     return {
       formFields,
