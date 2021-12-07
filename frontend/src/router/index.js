@@ -23,6 +23,7 @@ const routes = [
     path: '/cart/',
     name: 'cart',
     component: CartPage,
+    meta: { title: 'Коррррзина' },
   },
   {
     path: '/order/',
