@@ -2,11 +2,12 @@
 import { useStore } from 'vuex';
 import { computed, onMounted, ref } from 'vue';
 import axios from 'axios';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { API_BASE_URL } from '@/config';
 
 export default function () {
   const $route = useRoute();
+  const $router = useRouter();
   const orderId = computed(() => $route.params.id);
   const $store = useStore();
   const orderInfo = ref({});
@@ -37,8 +38,8 @@ export default function () {
         cuteDeliveryType.value = `${responseData.deliveryType.title}: ${responseData.deliveryType.price}₽`;
         deliveryPrice.value = responseData.deliveryType.price;
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        $router.push({ name: 'notFound' });
       })
       .then(() => {
         $store.commit('preloaderChangeStatus', false);
