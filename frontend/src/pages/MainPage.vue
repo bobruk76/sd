@@ -11,11 +11,12 @@
 
     <div class="content__catalog">
       <product-filter
-        v-model:price-from="filterPriceFrom"
-        v-model:price-to="filterPriceTo"
-        v-model:category-id="filterCategoryId"
+        v-model:price-from.number="filterPriceFrom"
+        v-model:price-to.number="filterPriceTo"
+        v-model:category-id.number="filterCategoryId"
+        v-model:color-id.number="filterColorId"
         v-model:product-props="filterProductProps"
-        v-model:page="page"
+        v-model:page.number="page"
         @emGetProducts="getProducts"
       >
       </product-filter>
@@ -42,6 +43,7 @@ export default {
   setup() {
     const $route = useRoute();
     const filterCategoryId = ref(0);
+    // const filterColorId = ref(0);
     const page = ref(1);
     const countPerPage = ref(4);
     const filterPriceFrom = ref(0);
@@ -58,6 +60,7 @@ export default {
         filterPriceFrom,
         filterPriceTo,
         filterCategoryId,
+        // filterColorId,
         filterProductProps,
       );
     };
@@ -73,6 +76,7 @@ export default {
       filterPriceFrom,
       filterPriceTo,
       filterCategoryId,
+      // filterColorId,
       filterProductProps,
       products,
       totalProducts,

@@ -17,6 +17,7 @@ export default function () {
     filterPriceFrom,
     filterPriceTo,
     filterCategoryId,
+    // filterColorId,
     filterProductProps,
   ) => {
     $store.commit('preloaderChangeStatus', true);
@@ -26,6 +27,7 @@ export default function () {
         page: page.value,
         limit: countPerPage.value,
         categoryId: filterCategoryId.value,
+        // colorId: filterColorId.value,
         ...(+filterPriceFrom.value > 0 ? { minPrice: filterPriceFrom.value } : null),
         ...(+filterPriceTo.value > 0 ? { maxPrice: filterPriceTo.value } : null),
         ...(filterProductProps.value === null ? null : { props: filterProductProps.value }),

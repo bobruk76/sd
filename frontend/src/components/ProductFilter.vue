@@ -29,6 +29,30 @@
           </select>
         </label>
       </fieldset>
+
+<!--      <fieldset class="form__block">-->
+<!--        <legend class="form__legend">Цвет</legend>-->
+<!--        <ul class="colors">-->
+
+<!--          <li class="colors__item" v-for="item in colors"-->
+<!--              :key="item.id"-->
+<!--              :value="item.id">-->
+<!--            <label class="colors__label">-->
+<!--              <input-->
+<!--                class="colors__radio sr-only"-->
+<!--                type="radio"-->
+<!--                name="color"-->
+<!--                :value="item.id"-->
+<!--                v-model.number="currentColorId"-->
+<!--              >-->
+<!--              <span class="colors__value" :style="'background-color: ' + item.code + ';'">-->
+<!--                  </span>-->
+<!--            </label>-->
+<!--          </li>-->
+
+<!--        </ul>-->
+<!--      </fieldset>-->
+
       <fieldset class="form__block" v-for="items in categoryProductProps" :key="items.id">
         <legend class="form__legend">{{ items.title }}</legend>
         <ul class="check-list">
@@ -67,21 +91,24 @@ import {
 import { API_BASE_URL } from '@/config';
 
 export default {
-  props: ['priceFrom', 'priceTo', 'categoryId', 'page', 'productProps'],
+  props: ['priceFrom', 'priceTo', 'categoryId', 'colorId', 'page', 'productProps'],
   emits: ['emGetProducts'],
   setup(props, { emit: $emit }) {
     const formFields = ref(props.productProps);
     const currentPriceFrom = ref(props.priceFrom);
     const currentPriceTo = ref(props.priceTo);
     const currentCategoryId = ref(props.categoryId);
+    const currentColorId = ref(props.colorId);
     const categoryProductProps = ref(null);
     const categories = ref(null);
+    // const colors = ref(null);
 
     const onSubmit = () => {
       $emit('update:page', 1);
       $emit('update:priceFrom', currentPriceFrom.value);
       $emit('update:priceTo', currentPriceTo.value);
       $emit('update:categoryId', currentCategoryId.value);
+      // $emit('update:colorId', currentColorId.value);
       $emit('update:productProps', toRaw(formFields.value));
       $emit('emGetProducts');
     };
@@ -89,6 +116,7 @@ export default {
       currentPriceFrom.value = 0;
       currentPriceTo.value = 0;
       currentCategoryId.value = 0;
+      currentColorId.value = null;
       categoryProductProps.value = {};
       formFields.value = {};
       onSubmit();
@@ -99,11 +127,21 @@ export default {
     };
     const onLoadProductProps = async () => {
       formFields.value = {};
+      let colors = {};
       categoryProductProps.value = {};
       if (+currentCategoryId.value > 0) {
+        axios.get(`${API_BASE_URL}/colors`)
+          .then((response) => {
+            colors = response.data.items;
+          });
         axios.get(`${API_BASE_URL}/productCategories/${currentCategoryId.value}`)
           .then((response) => {
             categoryProductProps.value = response.data.productProps;
+            categoryProductProps.value.push({
+              availableValues: colors,
+              code: 'colors',
+              title: 'Цвет',
+            });
             categoryProductProps.value.forEach((obj) => {
               formFields.value[obj.code] = [];
             });
@@ -117,6 +155,7 @@ export default {
       currentPriceFrom,
       currentPriceTo,
       currentCategoryId,
+      currentColorId,
       categories,
       categoryProductProps,
       onSubmit,
