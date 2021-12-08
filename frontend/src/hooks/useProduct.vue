@@ -41,6 +41,23 @@ export default function () {
         $store.commit('preloaderChangeStatus', false);
       });
   };
+  const addToCart = ({ currentProductOfferId, colorId, quantity }) => {
+    $store.commit('preloaderChangeStatus', true);
+    if (quantity > 0) {
+      $store.dispatch('addProductToCart', {
+        productOfferId: currentProductOfferId,
+        colorId,
+        quantity,
+      })
+        .then(() => {
+          // productAdded.value = true;
+        })
+        .catch(() => {})
+        .then(() => {
+          $store.commit('preloaderChangeStatus', false);
+        });
+    }
+  };
   return {
     product: productData,
     category,
@@ -49,6 +66,7 @@ export default function () {
     currentOffer,
     productOfferId,
     fetchProduct,
+    addToCart,
   };
 }
 </script>

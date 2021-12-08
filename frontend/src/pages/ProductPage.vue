@@ -159,12 +159,12 @@
 
 <script>
 import { ref } from 'vue';
-import { useStore } from 'vuex';
+// import { useStore } from 'vuex';
 import useProduct from '@/hooks/useProduct.vue';
 
 export default {
   setup() {
-    const $store = useStore();
+    // const $store = useStore();
     const productAdded = ref(false);
     const productAmount = ref(1);
 
@@ -176,34 +176,22 @@ export default {
       currentOffer,
       productOfferId,
       fetchProduct,
+      addToCart,
     } = useProduct();
 
     const doIncrementProduct = () => {
       productAmount.value += 1;
     };
     const doDecrementProduct = () => {
-      productAmount.value -= 1;
-    };
-    const doAddToCart = () => {
-      $store.commit('preloaderChangeStatus', true);
-      if (productAmount.value > 0) {
-        $store.dispatch('addProductToCart', {
-          productOfferId: productOfferId.value,
-          colorId: currentColorId.value,
-          quantity: productAmount.value,
-        })
-          .then(() => {
-            productAdded.value = true;
-          })
-          .catch((error) => {
-            console.log(error);
-          })
-          .then(() => {
-            $store.commit('preloaderChangeStatus', false);
-          });
+      if (+productAmount.value > 1) {
+        productAmount.value -= 1;
       }
     };
-
+    const doAddToCart = () => addToCart({
+      currentProductOfferId: productOfferId.value,
+      colorId: currentColorId.value,
+      quantity: productAmount.value,
+    });
     fetchProduct();
 
     return {

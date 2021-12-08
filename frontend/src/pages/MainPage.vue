@@ -24,6 +24,8 @@
         <product-list :products="products"></product-list>
         <base-paginate :count-pages="countProductPages"
                        v-model:page.number="page"
+                       v-model:count-per-page="countPerPage"
+                       :options="options"
         >
 
         </base-paginate>
@@ -37,6 +39,7 @@ import {
   onBeforeMount, ref, watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
 import ProductList from '@/components/ProductList.vue';
 import BasePaginate from '@/components/BasePaginate.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
@@ -46,10 +49,12 @@ export default {
   components: { ProductList, BasePaginate, ProductFilter },
   setup() {
     const $route = useRoute();
+    const $store = useStore();
+    const options = $store.getters.getOptions;
     const filterCategoryId = ref(0);
     const filterColorId = ref(0);
     const page = ref(1);
-    const countPerPage = ref(4);
+    const countPerPage = ref(null);
     const filterPriceFrom = ref(0);
     const filterPriceTo = ref(0);
     const filterProductProps = ref({});
@@ -70,9 +75,10 @@ export default {
     };
     onBeforeMount(() => {
       filterCategoryId.value = ('categoryId' in $route.params) ? $route.params.categoryId : 0;
+      countPerPage.value = options[0].value;
       getProducts();
     });
-    watch(page, getProducts);
+    watch([page, countPerPage], getProducts);
 
     return {
       page,
@@ -86,6 +92,7 @@ export default {
       totalProducts,
       countProductPages,
       fetchProducts,
+      options,
       getProducts,
     };
   },

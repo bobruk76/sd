@@ -10,6 +10,11 @@ export default createStore({
     preloader: false,
     orderInfo: null,
     orderId: null,
+    options: [
+      { value: 9 },
+      { value: 18 },
+      { value: 27 },
+    ],
   },
 
   mutations: {
@@ -156,6 +161,10 @@ export default createStore({
   },
 
   getters: {
+    getOptions(state) {
+      return state.options;
+    },
+
     getUserKey(state) {
       return state.userKey;
     },
