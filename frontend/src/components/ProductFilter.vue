@@ -14,7 +14,7 @@
           <span class="form__value">До</span>
         </label>
       </fieldset>
-      <fieldset class="form__block" disabled>
+      <fieldset class="form__block">
         <legend class="form__legend">Цвет</legend>
         <ul class="colors">
 
@@ -114,7 +114,7 @@ export default {
       currentPriceFrom.value = 0;
       currentPriceTo.value = 0;
       currentCategoryId.value = 0;
-      currentColorId.value = null;
+      currentColorId.value = 0;
       categoryProductProps.value = {};
       formFields.value = {};
       onSubmit();
