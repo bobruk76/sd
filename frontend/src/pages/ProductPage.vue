@@ -188,11 +188,14 @@ export default {
         productAmount.value -= 1;
       }
     };
-    const doAddToCart = () => addToCart({
-      currentProductOfferId: productOfferId.value,
-      colorId: currentColorId.value,
-      quantity: productAmount.value,
-    });
+    const doAddToCart = () => {
+      addToCart({
+        currentProductOfferId: productOfferId.value,
+        colorId: currentColorId.value,
+        quantity: productAmount.value,
+      });
+      productAdded.value = true;
+    };
     watch(productOfferId, (newValue) => {
       fetchOffer(newValue);
     });
