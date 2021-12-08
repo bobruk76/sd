@@ -14,7 +14,28 @@
           <span class="form__value">До</span>
         </label>
       </fieldset>
+      <fieldset class="form__block">
+        <legend class="form__legend">Цвет</legend>
+        <ul class="colors">
 
+          <li class="colors__item" v-for="item in colors"
+              :key="item.id"
+              :value="item.id">
+            <label class="colors__label">
+              <input
+                class="colors__radio sr-only"
+                type="radio"
+                name="color"
+                :value="item.id"
+                v-model.number="currentColorId"
+              >
+              <span class="colors__value" :style="'background-color: ' + item.code + ';'">
+                  </span>
+            </label>
+          </li>
+
+        </ul>
+      </fieldset>
       <fieldset class="form__block">
         <legend class="form__legend">Категория</legend>
         <label class="form__label form__label--select">
@@ -29,29 +50,6 @@
           </select>
         </label>
       </fieldset>
-
-<!--      <fieldset class="form__block">-->
-<!--        <legend class="form__legend">Цвет</legend>-->
-<!--        <ul class="colors">-->
-
-<!--          <li class="colors__item" v-for="item in colors"-->
-<!--              :key="item.id"-->
-<!--              :value="item.id">-->
-<!--            <label class="colors__label">-->
-<!--              <input-->
-<!--                class="colors__radio sr-only"-->
-<!--                type="radio"-->
-<!--                name="color"-->
-<!--                :value="item.id"-->
-<!--                v-model.number="currentColorId"-->
-<!--              >-->
-<!--              <span class="colors__value" :style="'background-color: ' + item.code + ';'">-->
-<!--                  </span>-->
-<!--            </label>-->
-<!--          </li>-->
-
-<!--        </ul>-->
-<!--      </fieldset>-->
 
       <fieldset class="form__block" v-for="items in categoryProductProps" :key="items.id">
         <legend class="form__legend">{{ items.title }}</legend>
@@ -99,16 +97,16 @@ export default {
     const currentPriceTo = ref(props.priceTo);
     const currentCategoryId = ref(props.categoryId);
     const currentColorId = ref(props.colorId);
-    const categoryProductProps = ref(null);
+    const categoryProductProps = ref({});
     const categories = ref(null);
-    // const colors = ref(null);
+    const colors = ref(null);
 
     const onSubmit = () => {
       $emit('update:page', 1);
       $emit('update:priceFrom', currentPriceFrom.value);
       $emit('update:priceTo', currentPriceTo.value);
       $emit('update:categoryId', currentCategoryId.value);
-      // $emit('update:colorId', currentColorId.value);
+      $emit('update:colorId', currentColorId.value);
       $emit('update:productProps', toRaw(formFields.value));
       $emit('emGetProducts');
     };
@@ -122,26 +120,28 @@ export default {
       onSubmit();
     };
     const onLoadParams = async () => {
+      axios.get(`${API_BASE_URL}/colors`)
+        .then((response) => {
+          colors.value = response.data.items;
+        });
       axios.get(`${API_BASE_URL}/productCategories`)
         .then((response) => { categories.value = response.data.items; });
     };
     const onLoadProductProps = async () => {
       formFields.value = {};
-      let colors = {};
       categoryProductProps.value = {};
       if (+currentCategoryId.value > 0) {
-        axios.get(`${API_BASE_URL}/colors`)
-          .then((response) => {
-            colors = response.data.items;
-          });
         axios.get(`${API_BASE_URL}/productCategories/${currentCategoryId.value}`)
           .then((response) => {
             categoryProductProps.value = response.data.productProps;
-            categoryProductProps.value.push({
-              availableValues: colors,
-              code: 'colors',
-              title: 'Цвет',
-            });
+            // categoryProductProps.value.push({
+            //   availableValues: colors.map((item) => ({
+            //     ...item,
+            //     value: item.title,
+            //   })),
+            //   code: 'color',
+            //   title: 'Цвет',
+            // });
             categoryProductProps.value.forEach((obj) => {
               formFields.value[obj.code] = [];
             });
@@ -157,6 +157,7 @@ export default {
       currentCategoryId,
       currentColorId,
       categories,
+      colors,
       categoryProductProps,
       onSubmit,
       onReset,

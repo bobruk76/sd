@@ -22,7 +22,11 @@
       </product-filter>
       <section class="catalog">
         <product-list :products="products"></product-list>
-        <base-paginate :count-pages="countProductPages" v-model="page"></base-paginate>
+        <base-paginate :count-pages="countProductPages"
+                       v-model:page.number="page"
+        >
+
+        </base-paginate>
       </section>
     </div>
   </main>
@@ -43,7 +47,7 @@ export default {
   setup() {
     const $route = useRoute();
     const filterCategoryId = ref(0);
-    // const filterColorId = ref(0);
+    const filterColorId = ref(0);
     const page = ref(1);
     const countPerPage = ref(4);
     const filterPriceFrom = ref(0);
@@ -60,7 +64,7 @@ export default {
         filterPriceFrom,
         filterPriceTo,
         filterCategoryId,
-        // filterColorId,
+        filterColorId,
         filterProductProps,
       );
     };
@@ -76,7 +80,7 @@ export default {
       filterPriceFrom,
       filterPriceTo,
       filterCategoryId,
-      // filterColorId,
+      filterColorId,
       filterProductProps,
       products,
       totalProducts,

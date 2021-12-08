@@ -17,7 +17,7 @@ export default function () {
     filterPriceFrom,
     filterPriceTo,
     filterCategoryId,
-    // filterColorId,
+    filterColorId,
     filterProductProps,
   ) => {
     $store.commit('preloaderChangeStatus', true);
@@ -27,7 +27,6 @@ export default function () {
         page: page.value,
         limit: countPerPage.value,
         categoryId: filterCategoryId.value,
-        // colorId: filterColorId.value,
         ...(+filterPriceFrom.value > 0 ? { minPrice: filterPriceFrom.value } : null),
         ...(+filterPriceTo.value > 0 ? { maxPrice: filterPriceTo.value } : null),
         ...(filterProductProps.value === null ? null : { props: filterProductProps.value }),
@@ -36,7 +35,11 @@ export default function () {
     })
       .then(
         (response) => {
-          productsData.value = response.data.items.map((item) => ({
+          const responseDataItems = response.data.items.filter((item) => {
+            const itemColorIds = item.colors.map((color) => color.id);
+            return itemColorIds.includes(filterColorId.value) && filterColorId.value > 0;
+          });
+          productsData.value = responseDataItems.map((item) => ({
             ...item,
             img: item.preview.file.url,
           }));

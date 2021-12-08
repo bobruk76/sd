@@ -29,27 +29,37 @@
             </svg>
           </a>
         </li>
+<!--        <li>-->
+<!--          <select v-model="selected">-->
+<!--            <option v-for="option in options" v-bind:value="option.value">-->
+<!--              {{ option.text }}-->
+<!--            </option>-->
+<!--          </select>-->
+<!--        </li>-->
+
       </ul>
 </template>
 
 <script>
-import { computed } from 'vue';
+// import { watch } from 'vue';
 
 export default {
 
-  props: ['modelValue', 'countPages'],
+  props: ['page', 'countPages'],
 
   setup(props, { emit }) {
-    const page = computed(() => props.modelValue);
     const doPaginate = (newPage) => {
       if ((newPage >= 1) && (newPage <= props.countPages)) {
-        emit('update:modelValue', newPage);
+        emit('update:page', newPage);
       }
     };
-
+    // watch(props.page, (oldPage, newPage) => {
+    //   if ((newPage >= 1) && (newPage <= props.countPages)) {
+    //     emit('update:modelValue', newPage);
+    //   }
+    // });
     return {
       doPaginate,
-      page,
     };
   },
 
