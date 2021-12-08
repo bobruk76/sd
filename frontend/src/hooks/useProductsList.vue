@@ -36,7 +36,7 @@ export default function () {
       .then(
         (response) => {
           const responseDataItems = response.data.items.filter((item) => {
-            const itemColorIds = item.colors.map((color) => color.id);
+            const itemColorIds = item.colors.map((color) => color.color.id);
             return itemColorIds.includes(filterColorId.value) || filterColorId.value === 0;
           });
           productsData.value = responseDataItems.map((item) => ({
