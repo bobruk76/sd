@@ -158,7 +158,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 // import { useStore } from 'vuex';
 import useProduct from '@/hooks/useProduct.vue';
 
@@ -177,6 +177,7 @@ export default {
       productOfferId,
       fetchProduct,
       addToCart,
+      fetchOffer,
     } = useProduct();
 
     const doIncrementProduct = () => {
@@ -192,8 +193,10 @@ export default {
       colorId: currentColorId.value,
       quantity: productAmount.value,
     });
+    watch(productOfferId, (newValue) => {
+      fetchOffer(newValue);
+    });
     fetchProduct();
-
     return {
       productAdded,
       product,

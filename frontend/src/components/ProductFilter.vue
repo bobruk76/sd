@@ -14,7 +14,7 @@
           <span class="form__value">До</span>
         </label>
       </fieldset>
-      <fieldset class="form__block">
+      <fieldset class="form__block" disabled>
         <legend class="form__legend">Цвет</legend>
         <ul class="colors">
 

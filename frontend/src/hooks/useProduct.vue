@@ -15,6 +15,13 @@ export default function () {
   const productOfferId = ref(0);
   const currentOffer = ref({});
   const category = ref({});
+  const fetchOffer = (newValue) => {
+    const { offers } = productData.value;
+    const offer = offers.find((item) => item.id === newValue);
+    currentOffer.value = Object.assign(offer, {
+      productPrice: numberFormat(offer.price),
+    });
+  };
   const fetchProduct = () => {
     $store.commit('preloaderChangeStatus', true);
     axios.get(`${API_BASE_URL}/products/${$route.params.id}`)
@@ -23,24 +30,20 @@ export default function () {
         category.value = product.category;
         colors.value = product.colors;
         currentColorId.value = product.colors[0].color.id;
-        const { offers } = product;
-        productOfferId.value = offers[0].id;
-        const offer = offers[0];
-        currentOffer.value = Object.assign(offer, {
-          productPrice: numberFormat(offer.price),
-        });
-
         productData.value = Object.assign(product, {
           productPrice: numberFormat(product.price),
           img: product.preview.file.url,
           title: product.mainProp.title,
         });
+        productOfferId.value = product.offers[0].id;
+        fetchOffer(productOfferId.value);
       })
       .catch(() => {})
       .then(() => {
         $store.commit('preloaderChangeStatus', false);
       });
   };
+
   const addToCart = ({ currentProductOfferId, colorId, quantity }) => {
     $store.commit('preloaderChangeStatus', true);
     if (quantity > 0) {
@@ -67,6 +70,7 @@ export default function () {
     productOfferId,
     fetchProduct,
     addToCart,
+    fetchOffer,
   };
 }
 </script>
