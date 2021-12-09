@@ -133,7 +133,7 @@ export default {
       if (+currentCategoryId.value > 0) {
         axios.get(`${API_BASE_URL}/productCategories/${currentCategoryId.value}`)
           .then((response) => {
-            categoryProductProps.value = response.data.productProps;
+            categoryProductProps.value = response.data.productProps.filter((item) => item.code !== 'color');
             categoryProductProps.value.forEach((obj) => {
               formFields.value[obj.code] = [];
             });
