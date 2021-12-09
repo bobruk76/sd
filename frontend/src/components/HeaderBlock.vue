@@ -87,15 +87,12 @@ import { useStore } from 'vuex';
 export default {
   setup() {
     const store = useStore();
-    const logoImg = '/img/svg/logo-tech.svg';
+    const logoImg = '@/img/svg/logo-tech.svg';
     const cartTotalAmounts = computed(() => store.getters.cartTotalAmounts);
     return {
       cartTotalAmounts,
       logoImg,
     };
   },
-  // computed: {
-  //   ...mapGetters(['cartTotalAmounts']),
-  // },
 };
 </script>
