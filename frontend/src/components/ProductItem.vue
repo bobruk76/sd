@@ -24,7 +24,7 @@
           >
           <span class="colors__value"
                 :style="'background-color: ' + item.color.code + ';'">
-                    </span>
+          </span>
         </label>
       </li>
     </ul>
@@ -37,14 +37,12 @@
 
 <script>
 import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import numberFormat from '@/helpers/numberFormat';
 import useProduct from '@/hooks/useProduct.vue';
 
 export default {
   props: ['product'],
   setup(props) {
-    const $router = useRouter();
     const productPrice = computed(() => numberFormat(props.product.price));
     const currentColorId = ref(props.product.colors[0].color.id);
     const productAmount = ref(1);
@@ -58,7 +56,6 @@ export default {
         colorId: currentColorId.value,
         quantity: productAmount.value,
       });
-      $router.push({ name: 'cart' });
     };
 
     return {

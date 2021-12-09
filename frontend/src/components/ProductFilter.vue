@@ -134,14 +134,6 @@ export default {
         axios.get(`${API_BASE_URL}/productCategories/${currentCategoryId.value}`)
           .then((response) => {
             categoryProductProps.value = response.data.productProps;
-            // categoryProductProps.value.push({
-            //   availableValues: colors.map((item) => ({
-            //     ...item,
-            //     value: item.title,
-            //   })),
-            //   code: 'color',
-            //   title: 'Цвет',
-            // });
             categoryProductProps.value.forEach((obj) => {
               formFields.value[obj.code] = [];
             });
