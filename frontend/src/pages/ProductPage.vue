@@ -25,9 +25,7 @@
     <section class="item">
       <div class="item__pics pics">
         <div class="pics__wrapper">
-          <img width="570" height="570"
-               :src="product.img"
-               :alt="product.title">
+          <img :src="product.img" :alt="product.title">
         </div>
       </div>
 
@@ -217,3 +215,7 @@ export default {
 
 };
 </script>
+<style scoped lang="stylus">
+.item__pics img
+  max-height: 70vh;
+</style>

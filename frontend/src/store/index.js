@@ -11,9 +11,9 @@ export default createStore({
     orderInfo: null,
     orderId: null,
     options: [
-      { value: 9 },
-      { value: 18 },
-      { value: 27 },
+      { value: 12 },
+      { value: 24 },
+      { value: 32 },
     ],
   },
 
