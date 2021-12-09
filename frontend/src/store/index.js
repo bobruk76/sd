@@ -42,6 +42,11 @@ export default createStore({
       localStorage.setItem('userKey', userKey);
     },
 
+    removeUserKey(state) {
+      state.userKey = null;
+      localStorage.clear();
+    },
+
     updateOrderId(state, orderId) {
       state.orderId = orderId;
       let orders = localStorage.getItem('orders');
@@ -85,6 +90,8 @@ export default createStore({
         )
         .catch((error) => {
           console.log(error);
+          console.log('заходит');
+          // userAccessKey
         })
         .then(
           () => {
@@ -115,9 +122,17 @@ export default createStore({
               },
             )
             .catch((error) => {
-              console.log(error);
+              const errorQuery = error.response.data.error.query;
+              if ('userAccessKey' in errorQuery) {
+                context.commit('removeUserKey');
+                context.dispatch('loadBaskets')
+                  .then(() => {});
+              }
             })
-        ));
+        ))
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     removeProduct(context, basketItemId) {
