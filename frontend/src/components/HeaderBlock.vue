@@ -87,7 +87,8 @@ import { useStore } from 'vuex';
 export default {
   setup() {
     const store = useStore();
-    const logoImg = '@/img/svg/logo-tech.svg';
+    // eslint-disable-next-line global-require
+    const logoImg = require('@/img/svg/logo-tech.svg');
     const cartTotalAmounts = computed(() => store.getters.cartTotalAmounts);
     return {
       cartTotalAmounts,
