@@ -79,8 +79,6 @@ export default {
   border-radius 5%
   &:hover
     background-color: #F0F0F0
-    //animation: pulse 1s
-    //box-shadow: 0 0 0 2em rgba(#fff,0)
 
 .catalog__pic img
   object-fit: contain
