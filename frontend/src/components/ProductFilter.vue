@@ -32,10 +32,9 @@
             <label class="colors__label">
               <input
                 class="colors__radio sr-only"
-                type="radio"
-                name="color"
+                type="checkbox"
                 :value="item.id"
-                v-model.number="currentColorId"
+                v-model.number="currentColorIds"
               >
               <span class="colors__value" :style="'background-color: ' + item.code + ';'">
                   </span>
@@ -97,14 +96,14 @@ import {
 import { API_BASE_URL } from '@/config';
 
 export default {
-  props: ['priceFrom', 'priceTo', 'categoryId', 'colorId', 'page', 'productProps', 'countPerPage', 'options'],
+  props: ['priceFrom', 'priceTo', 'categoryId', 'colorIds', 'page', 'productProps', 'countPerPage', 'options'],
   emits: ['emGetProducts'],
   setup(props, { emit: $emit }) {
     const formFields = ref(props.productProps);
     const currentPriceFrom = ref(props.priceFrom);
     const currentPriceTo = ref(props.priceTo);
     const currentCategoryId = ref(props.categoryId);
-    const currentColorId = ref(props.colorId);
+    const currentColorIds = ref(props.colorIds);
     const categoryProductProps = ref({});
     const categories = ref(null);
     const colors = ref(null);
@@ -114,7 +113,7 @@ export default {
       $emit('update:priceFrom', currentPriceFrom.value);
       $emit('update:priceTo', currentPriceTo.value);
       $emit('update:categoryId', currentCategoryId.value);
-      $emit('update:colorId', currentColorId.value);
+      $emit('update:colorIds', currentColorIds.value);
       $emit('update:productProps', toRaw(formFields.value));
       $emit('emGetProducts');
     };
@@ -122,7 +121,7 @@ export default {
       currentPriceFrom.value = 0;
       currentPriceTo.value = 0;
       currentCategoryId.value = 0;
-      currentColorId.value = 0;
+      currentColorIds.value = [];
       categoryProductProps.value = {};
       formFields.value = {};
       currentCountPerPage.value = props.options[0].value;
@@ -157,7 +156,7 @@ export default {
       currentPriceFrom,
       currentPriceTo,
       currentCategoryId,
-      currentColorId,
+      currentColorIds,
       categories,
       colors,
       categoryProductProps,

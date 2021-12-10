@@ -17,7 +17,7 @@ export default function () {
     filterPriceFrom,
     filterPriceTo,
     filterCategoryId,
-    filterColorId,
+    filterColorIds,
     filterProductProps,
   ) => {
     $store.commit('preloaderChangeStatus', true);
@@ -36,8 +36,8 @@ export default function () {
       .then(
         (response) => {
           const responseDataItems = response.data.items.filter((item) => {
-            const itemColorIds = item.colors.map((color) => color.color.id);
-            return itemColorIds.includes(filterColorId.value) || filterColorId.value === 0;
+            const itemColorIds = item.colors.filter((color) => filterColorIds.value.includes(color.color.id));
+            return itemColorIds.length > 0 || filterColorIds.value.length === 0;
           });
           productsData.value = responseDataItems.map((item) => ({
             ...item,

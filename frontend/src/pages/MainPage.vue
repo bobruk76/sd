@@ -14,7 +14,7 @@
         v-model:price-from.number="filterPriceFrom"
         v-model:price-to.number="filterPriceTo"
         v-model:category-id.number="filterCategoryId"
-        v-model:color-id.number="filterColorId"
+        v-model:color-ids="filterColorIds"
         v-model:product-props="filterProductProps"
         v-model:page.number="page"
         v-model:count-per-page="countPerPage"
@@ -49,7 +49,7 @@ export default {
     const $store = useStore();
     const options = $store.getters.getOptions;
     const filterCategoryId = ref(0);
-    const filterColorId = ref(0);
+    const filterColorIds = ref([]);
     const page = ref(1);
     const countPerPage = ref(null);
     const filterPriceFrom = ref(0);
@@ -66,7 +66,7 @@ export default {
         filterPriceFrom,
         filterPriceTo,
         filterCategoryId,
-        filterColorId,
+        filterColorIds,
         filterProductProps,
       );
     };
@@ -83,7 +83,7 @@ export default {
       filterPriceFrom,
       filterPriceTo,
       filterCategoryId,
-      filterColorId,
+      filterColorIds,
       filterProductProps,
       products,
       totalProducts,
