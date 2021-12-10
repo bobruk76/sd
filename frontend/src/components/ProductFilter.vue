@@ -1,7 +1,15 @@
 <template>
   <aside class="filter">
-    <h2 class="filter__title">Фильтры</h2>
-
+    <h2 class="filter__title">
+      <span>Фильтры</span>
+      <label class="form__label form__label--select">
+        <select class="form__select" v-model="currentCountPerPage">
+          <option v-for="option in options" :value="option.value" :key="option.key">
+            {{ option.value }}
+          </option>
+        </select>
+      </label>
+    </h2>
     <form class="filter__form form">
       <fieldset class="form__block">
         <legend class="form__legend">Цена</legend>
@@ -89,7 +97,7 @@ import {
 import { API_BASE_URL } from '@/config';
 
 export default {
-  props: ['priceFrom', 'priceTo', 'categoryId', 'colorId', 'page', 'productProps'],
+  props: ['priceFrom', 'priceTo', 'categoryId', 'colorId', 'page', 'productProps', 'countPerPage', 'options'],
   emits: ['emGetProducts'],
   setup(props, { emit: $emit }) {
     const formFields = ref(props.productProps);
@@ -100,7 +108,7 @@ export default {
     const categoryProductProps = ref({});
     const categories = ref(null);
     const colors = ref(null);
-
+    const currentCountPerPage = ref(props.countPerPage);
     const onSubmit = () => {
       $emit('update:page', 1);
       $emit('update:priceFrom', currentPriceFrom.value);
@@ -141,6 +149,7 @@ export default {
       }
     };
     watch(currentCategoryId, onLoadProductProps);
+    watch(currentCountPerPage, (newCount) => $emit('update:countPerPage', newCount));
     onLoadParams();
     return {
       formFields,
@@ -151,9 +160,20 @@ export default {
       categories,
       colors,
       categoryProductProps,
+      currentCountPerPage,
       onSubmit,
       onReset,
     };
   },
 };
 </script>
+<style scoped lang="stylus">
+h2
+  display: flex;
+  justify-content: space-between;
+  .form__select
+    font-family: sans-serif
+  //.form__label--select
+  //  max-width 30%
+
+</style>

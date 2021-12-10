@@ -17,17 +17,14 @@
         v-model:color-id.number="filterColorId"
         v-model:product-props="filterProductProps"
         v-model:page.number="page"
+        v-model:count-per-page="countPerPage"
+        :options="options"
         @emGetProducts="getProducts"
       >
       </product-filter>
       <section class="catalog">
         <product-list :products="products"></product-list>
-        <base-paginate :count-pages="countProductPages"
-                       v-model:page.number="page"
-                       v-model:count-per-page="countPerPage"
-                       :options="options"
-        >
-
+        <base-paginate :count-pages="countProductPages" v-model:page.number="page">
         </base-paginate>
       </section>
     </div>

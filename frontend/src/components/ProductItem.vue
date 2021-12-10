@@ -69,6 +69,8 @@ export default {
 <style scoped lang="stylus">
 .button
   padding 10px
+  margin-top 10px
+  border-radius 5%
 .catalog__pic img
   object-fit: contain
 </style>

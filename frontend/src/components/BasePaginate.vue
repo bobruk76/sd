@@ -29,34 +29,22 @@
             </svg>
           </a>
         </li>
-        <li>
-          <select v-model="currentCountPerPage">
-            <option v-for="option in options" :value="option.value" :key="option.key">
-              {{ option.value }}
-            </option>
-          </select>
-        </li>
-
       </ul>
 </template>
 
 <script>
-import { ref, watch } from 'vue';
-
 export default {
 
-  props: ['page', 'countPages', 'countPerPage', 'options'],
+  props: ['page', 'countPages'],
 
   setup(props, { emit: $emit }) {
-    const currentCountPerPage = ref(props.countPerPage);
     const doPaginate = (newPage) => {
       if ((newPage >= 1) && (newPage <= props.countPages)) {
         $emit('update:page', newPage);
       }
     };
-    watch(currentCountPerPage, (newCount) => $emit('update:countPerPage', newCount));
+
     return {
-      currentCountPerPage,
       doPaginate,
     };
   },
