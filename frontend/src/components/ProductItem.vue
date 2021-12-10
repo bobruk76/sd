@@ -28,7 +28,7 @@
         </label>
       </li>
     </ul>
-    <button class="button button--primery" type="submit" @click.prevent="doAddToCart">
+    <button class="button" type="submit" @click.prevent="doAddToCart">
       В корзину
     </button>
 
@@ -68,9 +68,20 @@ export default {
 </script>
 <style scoped lang="stylus">
 .button
+  background-color: #9eff00
+  border: 1px solid #9eff00
+  font-family: "PressStart"
+  color: #222
+  font-size: 13px
+
   padding 10px
   margin-top 10px
   border-radius 5%
+  &:hover
+    background-color: #F0F0F0
+    //animation: pulse 1s
+    //box-shadow: 0 0 0 2em rgba(#fff,0)
+
 .catalog__pic img
   object-fit: contain
 </style>
