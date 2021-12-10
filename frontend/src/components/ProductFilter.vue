@@ -125,6 +125,7 @@ export default {
       currentColorId.value = 0;
       categoryProductProps.value = {};
       formFields.value = {};
+      currentCountPerPage.value = props.options[0].value;
       onSubmit();
     };
     const onLoadParams = async () => {
@@ -148,7 +149,7 @@ export default {
           });
       }
     };
-    watch(currentCategoryId, onLoadProductProps);
+    watch(currentCategoryId, onLoadProductProps, { immediate: true });
     watch(currentCountPerPage, (newCount) => $emit('update:countPerPage', newCount));
     onLoadParams();
     return {
@@ -173,7 +174,4 @@ h2
   justify-content: space-between;
   .form__select
     font-family: sans-serif
-  //.form__label--select
-  //  max-width 30%
-
 </style>

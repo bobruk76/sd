@@ -47,9 +47,7 @@ export default function () {
           totalProducts.value = response.data.pagination.total;
         },
       )
-      .catch((response) => {
-        console.log(response);
-      })
+      .catch(() => {})
       .then(() => {
         $store.commit('preloaderChangeStatus', false);
       }), 0);
