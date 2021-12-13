@@ -59,7 +59,7 @@ export default createStore({
       basketItemId,
       amount,
     }) {
-      const Item = state.cartProducts.find((item) => item.id === basketItemId);
+      const Item = state.cartProducts.find((element) => element.id === basketItemId);
       if (Item) {
         Item.amount = +amount;
         Item.totalPrice = Item.amount * Item.price;
