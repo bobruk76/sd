@@ -10,12 +10,20 @@
 </template>
 
 <script>
-import formFieldMixin from '@/mixins/formFieldMixin';
+import { ref, watch } from 'vue';
 import BaseFormField from '@/components/BaseFormField.vue';
 
 export default {
+  props: ['type', 'name', 'title', 'error', 'placeholder', 'modelValue'],
   components: { BaseFormField },
-  mixins: [formFieldMixin],
-  props: ['type'],
+  setup(props, { emit: $emit }) {
+    const dataValue = ref(props.modelValue);
+    watch(dataValue, (newValue) => {
+      $emit('update:modelValue', newValue);
+    });
+    return {
+      dataValue,
+    };
+  },
 };
 </script>
