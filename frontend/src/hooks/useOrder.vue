@@ -55,7 +55,7 @@ export default function () {
       },
     })
       .then((response) => {
-        $store.commit('updateOrderInfo', response.data);
+        // $store.commit('updateOrderInfo', response.data);
         $store.commit('updateOrderId', response.data.id);
         $router.push({ name: 'orderInfo', params: { id: response.data.id } });
       })

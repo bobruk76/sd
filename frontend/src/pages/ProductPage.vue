@@ -187,15 +187,24 @@ export default {
       }
     };
     const doAddToCart = () => {
-      addToCart({
-        currentProductOfferId: productOfferId.value,
-        colorId: currentColorId.value,
-        quantity: productAmount.value,
-      });
-      productAdded.value = true;
+      if (productAmount.value > 0) {
+        addToCart({
+          currentProductOfferId: productOfferId.value,
+          colorId: currentColorId.value,
+          quantity: productAmount.value,
+        });
+        productAdded.value = true;
+      } else {
+        productAmount.value = 1;
+      }
     };
     watch(productOfferId, (newValue) => {
       fetchOffer(newValue);
+    });
+    watch(productAmount, (newValue) => {
+      if (newValue < 0) {
+        productAmount.value = 1;
+      }
     });
     fetchProduct();
     return {
