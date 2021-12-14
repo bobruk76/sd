@@ -1,8 +1,11 @@
 <template>
   <div class="cart__block">
     <ul class="cart__orders">
-      <cart-block-item v-for="item in products" :item="item" :key="item.id" >
-      </cart-block-item>
+      <li class="cart__order" v-for="item in productsFormat" :key="item.id">
+        <h3>{{ item.title }}</h3>
+        <b>{{ item.priceFormat }} </b>
+        <span>Артикул: {{ item.id }}</span>
+      </li>
     </ul>
 
     <div class="cart__total">
@@ -16,18 +19,21 @@
 
 <script>
 import { computed } from 'vue';
-import CartBlockItem from '@/components/CartBlockItem.vue';
 import numberFormat from '@/helpers/numberFormat';
 
 export default {
-  components: { CartBlockItem },
   props: ['products', 'totalSum', 'totalAmounts', 'cuteDeliveryType', 'deliveryPrice'],
   setup(props) {
     const totalSumFormat = computed(() => numberFormat(props.totalSum) || '');
     const itogoSumFormat = computed(() => numberFormat(Number(props.totalSum) + Number(props.deliveryPrice)) || '');
+    const productsFormat = computed(() => props.products.map((item) => ({
+      ...item,
+      priceFormat: `${item.quantity} x ${numberFormat(item.price)} ₽`,
+    })) || []);
     return {
       totalSumFormat,
       itogoSumFormat,
+      productsFormat,
     };
   },
 };
