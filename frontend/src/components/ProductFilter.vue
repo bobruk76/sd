@@ -145,7 +145,8 @@ export default {
             categoryProductProps.value.forEach((obj) => {
               formFields.value[obj.code] = [];
             });
-          });
+          })
+          .catch(() => {});
       }
     };
     watch(currentCategoryId, onLoadProductProps, { immediate: true });

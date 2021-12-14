@@ -46,7 +46,7 @@ const router = createRouter({
   history: createWebHistory(config.publicPath),
   routes,
 });
-router.afterEach((to) => {
+router.beforeEach((to) => {
   document.title = to.meta.title || DEFAULT_TITLE;
 });
 
