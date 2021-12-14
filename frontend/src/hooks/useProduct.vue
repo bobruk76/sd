@@ -2,13 +2,14 @@
 import axios from 'axios';
 import { ref } from 'vue';
 import { useStore } from 'vuex';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import numberFormat from '@/helpers/numberFormat';
 import { API_BASE_URL } from '@/config';
 
 export default function () {
   const $store = useStore();
   const $route = useRoute();
+  const $router = useRouter();
   const productData = ref({});
   const colors = ref([]);
   const currentColorId = ref(0);
@@ -38,7 +39,9 @@ export default function () {
         productOfferId.value = product.offers[0].id;
         fetchOffer(productOfferId.value);
       })
-      .catch(() => {})
+      .catch(() => {
+        $router.push({ name: 'notFound' });
+      })
       .then(() => {
         $store.commit('preloaderChangeStatus', false);
       });

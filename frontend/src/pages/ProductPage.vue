@@ -157,12 +157,10 @@
 
 <script>
 import { ref, watch } from 'vue';
-// import { useStore } from 'vuex';
 import useProduct from '@/hooks/useProduct.vue';
 
 export default {
   setup() {
-    // const $store = useStore();
     const productAdded = ref(false);
     const productAmount = ref(1);
 
