@@ -36,7 +36,7 @@
                 :value="item.id"
                 v-model.number="currentColorIds"
               >
-              <span class="colors__value" :style="'background-color: ' + item.code + ';'">
+              <span class="colors__value" :style="item.style">
                   </span>
             </label>
           </li>
@@ -130,7 +130,10 @@ export default {
     const onLoadParams = async () => {
       axios.get(`${API_BASE_URL}/colors`)
         .then((response) => {
-          colors.value = response.data.items;
+          colors.value = response.data.items.map((item) => ({
+            ...item,
+            style: `background-color: ${item.code};`,
+          }));
         });
       axios.get(`${API_BASE_URL}/productCategories`)
         .then((response) => { categories.value = response.data.items; });
